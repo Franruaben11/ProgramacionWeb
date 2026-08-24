@@ -11,13 +11,9 @@ func main() {
   staticDir := "./static"
 
   // 2. Crea un manejador (handler) de servidor de archivos.
-  // http.Dir convierte la ruta del directorio en un sistema de archivos HTTP.
-  // http.FileServer crea un manejador que sirve archivos desde ese sistema.
-  // ¡Automáticamente sirve index.html para directorios!
   fileServer := http.FileServer(http.Dir(staticDir))
 
     // 3. Registra el manejador para que atienda todas las peticiones ("/").
-  // Usamos http.Handle porque fileServer es un http.Handler.
   http.Handle("/", fileServer)
 
   // 4. Define el puerto y muestra un mensaje.
