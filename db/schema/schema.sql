@@ -28,12 +28,20 @@ CREATE TABLE Actividades (
 
 CREATE TABLE Avisos (
     id_aviso SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
     id_actividad INT REFERENCES Actividades(id_actividad) ON DELETE CASCADE,
     id_paciente INT REFERENCES Pacientes(id_paciente) ON DELETE CASCADE,
     id_enfermero INT REFERENCES Enfermeros(id_enfermero) ON DELETE CASCADE
 );
 
 -- 3. Tablas Intermedias (Para resolver las "listas")
+
+CREATE TABLE Enfermero_Paciente (
+    id_enfermero INT REFERENCES Enfermeros(id_enfermero) ON DELETE CASCADE,
+    id_paciente INT REFERENCES Pacientes(id_paciente) ON DELETE CASCADE,
+    PRIMARY KEY (id_enfermero, id_paciente)
+);
 
 -- Relación: Familiares tienen a cargo varios pacientes (o un paciente tiene varios familiares)
 CREATE TABLE Familiar_Paciente (
