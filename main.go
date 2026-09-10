@@ -13,7 +13,7 @@ func main() {
   // 2. Crea un manejador (handler) de servidor de archivos.
   fileServer := http.FileServer(http.Dir(staticDir))
 
-    // 3. Registra el manejador para que atienda todas las peticiones ("/").
+  // 3. Registra el manejador para que atienda todas las peticiones ("/").
   http.Handle("/", fileServer)
 
   // 4. Define el puerto y muestra un mensaje.
