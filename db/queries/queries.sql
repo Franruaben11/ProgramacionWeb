@@ -64,11 +64,11 @@ INSERT INTO Pacientes (nombre) VALUES ($1) RETURNING *;
 INSERT INTO Familiares (nombre, contrasena) VALUES ($1, $2) RETURNING *;
 
 -- name: CreateActividad :one
-INSERT INTO Actividades (nombre_actividad) VALUES ($1) RETURNING *;
+INSERT INTO Actividades (nombre_actividad, descripcion) VALUES ($1, $2) RETURNING *;
 
 -- name: CreateAviso :one
-INSERT INTO Avisos (nombre, descripcion, id_paciente, id_enfermero) 
-VALUES ($1, $2, $3, $4) RETURNING *;
+INSERT INTO Avisos (nombre, descripcion, id_actividad, id_paciente, id_enfermero) 
+VALUES ($1, $2, $3, $4, $5) RETURNING *;
 
 
 -- creates de relaciones (¡NUEVOS! Para llenar las tablas puente)
@@ -98,7 +98,7 @@ UPDATE Familiares SET nombre = $2, contrasena = $3 WHERE id_familiar = $1;
 UPDATE Actividades SET nombre_actividad = $2 WHERE id_actividad = $1;
 
 -- name: UpdateAviso :exec
-UPDATE Avisos SET nombre = $2, descripcion = $3, id_paciente = $4, id_enfermero = $5 WHERE id_aviso = $1;
+UPDATE Avisos SET nombre = $2, descripcion = $3, id_actividad = $4, id_paciente = $5, id_enfermero = $6 WHERE id_aviso = $1;
 
 
 -- delete

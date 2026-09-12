@@ -65,6 +65,7 @@ func TestCRUDFlow(t *testing.T) {
 		if err != nil || len(lista) == 0 {
 			t.Errorf("Error al listar enfermeros: %v", err)
 		}
+
 	})
 
 	t.Run("CRUD Pacientes y Actividades", func(t *testing.T) {
@@ -93,6 +94,7 @@ func TestCRUDFlow(t *testing.T) {
 		if err != nil {
 			t.Errorf("Error al asignar actividad al paciente: %v", err)
 		}
+
 	})
 
 	t.Run("CRUD Avisos (Relacional)", func(t *testing.T) {
@@ -126,6 +128,7 @@ func TestCRUDFlow(t *testing.T) {
 		if err != nil {
 			t.Errorf("Error al borrar aviso: %v", err)
 		}
+
 	})
 
 	t.Run("Eliminacion y Cascada", func(t *testing.T) {
@@ -139,5 +142,6 @@ func TestCRUDFlow(t *testing.T) {
 		if err != sql.ErrNoRows {
 			t.Errorf("Se esperaba sql.ErrNoRows, se obtuvo: %v", err)
 		}
+
 	})
 }

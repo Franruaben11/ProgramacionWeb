@@ -55,24 +55,30 @@ func (q *Queries) AsignarPacienteAFamiliar(ctx context.Context, arg AsignarPacie
 }
 
 const createActividad = `-- name: CreateActividad :one
-INSERT INTO Actividades (nombre_actividad) VALUES ($1) RETURNING id_actividad, nombre_actividad, descripcion
+INSERT INTO Actividades (nombre_actividad, descripcion) VALUES ($1, $2) RETURNING id_actividad, nombre_actividad, descripcion
 `
 
-func (q *Queries) CreateActividad(ctx context.Context, nombreActividad string) (Actividade, error) {
-	row := q.db.QueryRowContext(ctx, createActividad, nombreActividad)
+type CreateActividadParams struct {
+	NombreActividad string         `json:"nombre_actividad"`
+	Descripcion     sql.NullString `json:"descripcion"`
+}
+
+func (q *Queries) CreateActividad(ctx context.Context, arg CreateActividadParams) (Actividade, error) {
+	row := q.db.QueryRowContext(ctx, createActividad, arg.NombreActividad, arg.Descripcion)
 	var i Actividade
 	err := row.Scan(&i.IDActividad, &i.NombreActividad, &i.Descripcion)
 	return i, err
 }
 
 const createAviso = `-- name: CreateAviso :one
-INSERT INTO Avisos (nombre, descripcion, id_paciente, id_enfermero) 
-VALUES ($1, $2, $3, $4) RETURNING id_aviso, nombre, descripcion, id_actividad, id_paciente, id_enfermero
+INSERT INTO Avisos (nombre, descripcion, id_actividad, id_paciente, id_enfermero) 
+VALUES ($1, $2, $3, $4, $5) RETURNING id_aviso, nombre, descripcion, id_actividad, id_paciente, id_enfermero
 `
 
 type CreateAvisoParams struct {
 	Nombre      string         `json:"nombre"`
 	Descripcion sql.NullString `json:"descripcion"`
+	IDActividad sql.NullInt32  `json:"id_actividad"`
 	IDPaciente  sql.NullInt32  `json:"id_paciente"`
 	IDEnfermero sql.NullInt32  `json:"id_enfermero"`
 }
@@ -81,6 +87,7 @@ func (q *Queries) CreateAviso(ctx context.Context, arg CreateAvisoParams) (Aviso
 	row := q.db.QueryRowContext(ctx, createAviso,
 		arg.Nombre,
 		arg.Descripcion,
+		arg.IDActividad,
 		arg.IDPaciente,
 		arg.IDEnfermero,
 	)
@@ -500,13 +507,14 @@ func (q *Queries) UpdateActividad(ctx context.Context, arg UpdateActividadParams
 }
 
 const updateAviso = `-- name: UpdateAviso :exec
-UPDATE Avisos SET nombre = $2, descripcion = $3, id_paciente = $4, id_enfermero = $5 WHERE id_aviso = $1
+UPDATE Avisos SET nombre = $2, descripcion = $3, id_actividad = $4, id_paciente = $5, id_enfermero = $6 WHERE id_aviso = $1
 `
 
 type UpdateAvisoParams struct {
 	IDAviso     int32          `json:"id_aviso"`
 	Nombre      string         `json:"nombre"`
 	Descripcion sql.NullString `json:"descripcion"`
+	IDActividad sql.NullInt32  `json:"id_actividad"`
 	IDPaciente  sql.NullInt32  `json:"id_paciente"`
 	IDEnfermero sql.NullInt32  `json:"id_enfermero"`
 }
@@ -516,6 +524,7 @@ func (q *Queries) UpdateAviso(ctx context.Context, arg UpdateAvisoParams) error 
 		arg.IDAviso,
 		arg.Nombre,
 		arg.Descripcion,
+		arg.IDActividad,
 		arg.IDPaciente,
 		arg.IDEnfermero,
 	)
