@@ -24,7 +24,7 @@ test: db-up
 		echo "Esperando a PostgreSQL..."; \
 		sleep 1; \
 	done
-	go test ./... -gv
+	go test ./... -v -count=1
 
 test-reset: db-reset
 	@$(MAKE) test
