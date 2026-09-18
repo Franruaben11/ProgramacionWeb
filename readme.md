@@ -16,6 +16,13 @@ git clone https://github.com/Franruaben11/ProgramacionWeb.git
 cd ProgramacionWeb
 ```
 
+El codigo de `db/sqlc/` esta en `.gitignore`, asi que al clonar hay que regenerarlo
+(o instalarlo con `go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest`):
+
+```bash
+make sqlc
+```
+
 Para cargar la base de datos desde cero y ejecutar todas las pruebas:
 
 ```bash
@@ -40,6 +47,24 @@ make fmt         # Formatea los archivos Go
 ```
 
 La aplicacion queda disponible en `http://localhost:8080` y PostgreSQL en el puerto `5432`.
+
+## Estructura del proyecto
+
+```text
+cmd/server/            Entrypoint de la app (config, conexion DB, arranque)
+internal/config        Lectura de variables de entorno
+internal/server        Router, middleware y estaticos
+internal/handlers      Endpoints de la API por entidad
+internal/db            Store: conexion a PostgreSQL + wrapper de sqlc
+internal/response      Helpers de respuesta JSON
+db/schema              DDL de PostgreSQL
+db/queries             Consultas SQL fuente de sqlc
+db/sqlc                Codigo Go generado por sqlc (no editar a mano)
+db/tests               Tests de integracion sobre las queries generadas
+static/                Frontend (index.html)
+```
+
+La API responde en `/api/health` y `/api/pacientes`; el resto sirve `static/`.
 
 ## Caracteristicas de entidades
 

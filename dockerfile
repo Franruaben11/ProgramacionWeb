@@ -4,7 +4,7 @@ WORKDIR /app
 COPY go.mod go.sum* ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 go build -o /app/api .
+RUN CGO_ENABLED=0 go build -o /app/api ./cmd/server
 
 # Etapa 2: Imagen final (solo el binario y estáticos)
 FROM alpine:3.24

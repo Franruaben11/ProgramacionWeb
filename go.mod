@@ -1,5 +1,5 @@
-module main.go
+module github.com/Franruaben11/ProgramacionWeb
 
 go 1.22.2
 
-require github.com/lib/pq v1.12.3 // indirect
+require github.com/lib/pq v1.12.3

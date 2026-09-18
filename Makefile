@@ -1,4 +1,4 @@
-.PHONY: up down logs db-up db-reset test test-reset build fmt
+.PHONY: up down logs db-up db-reset test test-reset build fmt sqlc
 
 COMPOSE := docker compose
 DB_SERVICE := database
@@ -24,7 +24,7 @@ test: db-up
 		echo "Esperando a PostgreSQL..."; \
 		sleep 1; \
 	done
-	go test ./... -v
+	go test ./... -gv
 
 test-reset: db-reset
 	@$(MAKE) test
@@ -34,3 +34,6 @@ build:
 
 fmt:
 	gofmt -w $$(find . -name '*.go' -not -path './vendor/*')
+
+sqlc:
+	sqlc generate

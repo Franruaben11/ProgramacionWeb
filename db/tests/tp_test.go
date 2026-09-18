@@ -1,4 +1,4 @@
-package db
+package tests
 
 import (
 	"context"
@@ -6,10 +6,11 @@ import (
 	"testing"
 
 	_ "github.com/lib/pq"
+	sqlcdb "github.com/Franruaben11/ProgramacionWeb/db/sqlc"
 )
 
 // setupTestDB conecta a la base de datos levantada por tu docker-compose
-func setupTestDB(t *testing.T) *Queries {
+func setupTestDB(t *testing.T) *sqlcdb.Queries {
 	// DSN basado en tu docker-compose.yml
 	dsn := "postgres://user:password@localhost:5432/mydatabase?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
@@ -34,7 +35,7 @@ func setupTestDB(t *testing.T) *Queries {
 		db.Close()
 	})
 
-	return New(tx)
+	return sqlcdb.New(tx)
 }
 
 func TestCRUDFlow(t *testing.T) {
@@ -48,7 +49,7 @@ func TestCRUDFlow(t *testing.T) {
 
 	t.Run("CRUD Enfermeros", func(t *testing.T) {
 		// 1. Create
-		enf, err := q.CreateEnfermero(ctx, CreateEnfermeroParams{
+		enf, err := q.CreateEnfermero(ctx, sqlcdb.CreateEnfermeroParams{
 			Nombre:     "Juan Perez",
 			Contrasena: "123456",
 		})
@@ -64,7 +65,7 @@ func TestCRUDFlow(t *testing.T) {
 		}
 
 		// 3. Update
-		err = q.UpdateEnfermero(ctx, UpdateEnfermeroParams{
+		err = q.UpdateEnfermero(ctx, sqlcdb.UpdateEnfermeroParams{
 			IDEnfermero: enfermeroID,
 			Nombre:      "Juan Perez Actualizado",
 			Contrasena:  "654321",
@@ -95,7 +96,7 @@ func TestCRUDFlow(t *testing.T) {
 		if err != nil || pacGet.Nombre != "Maria Gomez" {
 			t.Fatalf("Error al obtener paciente: %v", err)
 		}
-		if err = q.UpdatePaciente(ctx, UpdatePacienteParams{IDPaciente: pacienteID, Nombre: "Maria Gomez Actualizada"}); err != nil {
+		if err = q.UpdatePaciente(ctx, sqlcdb.UpdatePacienteParams{IDPaciente: pacienteID, Nombre: "Maria Gomez Actualizada"}); err != nil {
 			t.Fatalf("Error al actualizar paciente: %v", err)
 		}
 		pacGet, err = q.GetPaciente(ctx, pacienteID)
@@ -103,7 +104,7 @@ func TestCRUDFlow(t *testing.T) {
 			t.Errorf("El paciente no se actualizo correctamente: %v", err)
 		}
 
-		act, err := q.CreateActividad(ctx, CreateActividadParams{
+		act, err := q.CreateActividad(ctx, sqlcdb.CreateActividadParams{
 			NombreActividad: "Gimnasia",
 			Descripcion:     sql.NullString{String: "Gimnasia matutina para movilidad", Valid: true},
 		})
@@ -111,7 +112,7 @@ func TestCRUDFlow(t *testing.T) {
 			t.Fatalf("Error al crear actividad: %v", err)
 		}
 		actividadID = act.IDActividad
-		if err = q.UpdateActividad(ctx, UpdateActividadParams{IDActividad: actividadID, NombreActividad: "Gimnasia actualizada"}); err != nil {
+		if err = q.UpdateActividad(ctx, sqlcdb.UpdateActividadParams{IDActividad: actividadID, NombreActividad: "Gimnasia actualizada"}); err != nil {
 			t.Fatalf("Error al actualizar actividad: %v", err)
 		}
 		actGet, err := q.GetActividad(ctx, actividadID)
@@ -119,7 +120,7 @@ func TestCRUDFlow(t *testing.T) {
 			t.Errorf("La actividad no se actualizo correctamente: %v", err)
 		}
 
-		fam, err := q.CreateFamiliar(ctx, CreateFamiliarParams{
+		fam, err := q.CreateFamiliar(ctx, sqlcdb.CreateFamiliarParams{
 			Nombre:     "Ana Gomez",
 			Contrasena: "familiar123",
 		})
@@ -127,7 +128,7 @@ func TestCRUDFlow(t *testing.T) {
 			t.Fatalf("Error al crear familiar: %v", err)
 		}
 		familiarID = fam.IDFamiliar
-		if err = q.UpdateFamiliar(ctx, UpdateFamiliarParams{IDFamiliar: familiarID, Nombre: "Ana Gomez Actualizada", Contrasena: "456789"}); err != nil {
+		if err = q.UpdateFamiliar(ctx, sqlcdb.UpdateFamiliarParams{IDFamiliar: familiarID, Nombre: "Ana Gomez Actualizada", Contrasena: "456789"}); err != nil {
 			t.Fatalf("Error al actualizar familiar: %v", err)
 		}
 		famGet, err := q.GetFamiliar(ctx, familiarID)
@@ -148,13 +149,13 @@ func TestCRUDFlow(t *testing.T) {
 	})
 
 	t.Run("Relaciones", func(t *testing.T) {
-		if err := q.AsignarActividadAPaciente(ctx, AsignarActividadAPacienteParams{IDPaciente: pacienteID, IDActividad: actividadID}); err != nil {
+		if err := q.AsignarActividadAPaciente(ctx, sqlcdb.AsignarActividadAPacienteParams{IDPaciente: pacienteID, IDActividad: actividadID}); err != nil {
 			t.Fatalf("Error al asignar actividad al paciente: %v", err)
 		}
-		if err := q.AsignarPacienteAEnfermero(ctx, AsignarPacienteAEnfermeroParams{IDEnfermero: enfermeroID, IDPaciente: pacienteID}); err != nil {
+		if err := q.AsignarPacienteAEnfermero(ctx, sqlcdb.AsignarPacienteAEnfermeroParams{IDEnfermero: enfermeroID, IDPaciente: pacienteID}); err != nil {
 			t.Fatalf("Error al asignar paciente al enfermero: %v", err)
 		}
-		if err := q.AsignarPacienteAFamiliar(ctx, AsignarPacienteAFamiliarParams{IDFamiliar: familiarID, IDPaciente: pacienteID}); err != nil {
+		if err := q.AsignarPacienteAFamiliar(ctx, sqlcdb.AsignarPacienteAFamiliarParams{IDFamiliar: familiarID, IDPaciente: pacienteID}); err != nil {
 			t.Fatalf("Error al asignar paciente al familiar: %v", err)
 		}
 
@@ -174,7 +175,7 @@ func TestCRUDFlow(t *testing.T) {
 
 	t.Run("CRUD Avisos (Relacional)", func(t *testing.T) {
 		// Create Aviso incluyendo IDActividad
-		aviso, err := q.CreateAviso(ctx, CreateAvisoParams{
+		aviso, err := q.CreateAviso(ctx, sqlcdb.CreateAvisoParams{
 			Nombre:      "Control de presion",
 			Descripcion: sql.NullString{String: "Tomar presion a las 10am", Valid: true},
 			IDActividad: sql.NullInt32{Int32: actividadID, Valid: true},
@@ -186,7 +187,7 @@ func TestCRUDFlow(t *testing.T) {
 		}
 
 		// Update Aviso
-		err = q.UpdateAviso(ctx, UpdateAvisoParams{
+		err = q.UpdateAviso(ctx, sqlcdb.UpdateAvisoParams{
 			IDAviso:     aviso.IDAviso,
 			Nombre:      "Control de presion (Urgente)",
 			Descripcion: sql.NullString{String: "Tomar presion AHORA", Valid: true},
