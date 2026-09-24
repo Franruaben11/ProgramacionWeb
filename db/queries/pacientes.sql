@@ -20,11 +20,11 @@ DELETE FROM Pacientes WHERE id_paciente = $1;
 
 -- name: ListPacientesPorEnfermero :many
 SELECT p.* FROM Pacientes p
-JOIN Enfermero_Paciente ep ON p.id_paciente = ep.id_paciente
+JOIN Enfermeros ep ON p.id_paciente = ep.id_paciente
 WHERE ep.id_enfermero = $1;
 
 
 -- name: ListPacientesPorFamiliar :many
 SELECT p.* FROM Pacientes p
-JOIN Familiar_Paciente fp ON p.id_paciente = fp.id_paciente
+JOIN Familiares fp ON p.id_paciente = fp.id_paciente
 WHERE fp.id_familiar = $1;
