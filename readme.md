@@ -43,8 +43,12 @@ La aplicacion queda disponible en `http://localhost:8080` y PostgreSQL en el pue
 
 ## Caracteristicas de entidades
 
+```bash
 Enfermero: nombre, id_enfermero, contraseña
 Paciente: nombre, id_paciente, lista_actividades
 Familiar: nombre, id_familiar, contraseña, lista_familiar
 Aviso: nombre, id_aviso, id_paciente, id_enfermero, descripcion
- 
+```
+
+La finalidad de este proyecto es desarrollar una web que permita a los familiares mantenerse informados sobre el día a día del paciente. Además, permitirá al enfermero registrar las actividades realizadas por el paciente y enviar avisos o notificaciones a sus familiares.
+
