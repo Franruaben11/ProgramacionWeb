@@ -29,16 +29,6 @@ type Enfermero struct {
 	Contrasena  string `json:"contrasena"`
 }
 
-type EnfermeroPaciente struct {
-	IDEnfermero int32 `json:"id_enfermero"`
-	IDPaciente  int32 `json:"id_paciente"`
-}
-
-type FamiliarPaciente struct {
-	IDFamiliar int32 `json:"id_familiar"`
-	IDPaciente int32 `json:"id_paciente"`
-}
-
 type Familiare struct {
 	IDFamiliar int32  `json:"id_familiar"`
 	Nombre     string `json:"nombre"`
@@ -48,9 +38,4 @@ type Familiare struct {
 type Paciente struct {
 	IDPaciente int32  `json:"id_paciente"`
 	Nombre     string `json:"nombre"`
-}
-
-type PacienteActividad struct {
-	IDPaciente  int32 `json:"id_paciente"`
-	IDActividad int32 `json:"id_actividad"`
 }
