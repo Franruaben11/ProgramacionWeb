@@ -1,28 +1,55 @@
 package main
 
 import (
+  "database/sql" // Paquete nativo para usar bases de datos
   "fmt"
   "net/http"
+  "log"
+
+  // Driver de Postgres (el guion bajo es obligatorio para que funcione)
+	_ "github.com/lib/pq" 
+	
+	// Carpeta de sqlc
+	"main.go/db/sqlc"
 )
 
 func main() {
 
-  // 1. Define el directorio que contiene los archivos estáticos.
+  // Conexión a la Base de Datos PostgreSQL
+	connStr := "postgresql://user:password@localhost:5432/mydatabase?sslmode=disable"
+	dbConn, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal("Error al abrir la base de datos:", err)
+	}
+	defer dbConn.Close()
+  
+  // Verificar que la conexión a la base de datos funciona
+  err = dbConn.Ping()
+  if err != nil {
+    log.Fatal("No se pudo conectar a la base de datos.", err)
+  }
+  fmt.Println("¡Conexión a la base de datos exitosa!")
+
+  // Crear la instancia de sqlc (Se usará para los CRUD) 
+  repo := db.New(dbConn)
+  _ = repo // Solo para que Go no tire error por variable sin usar por ahora
+  
+  // Define el directorio que contiene los archivos estáticos.
   staticDir := "./static"
 
-  // 2. Crea un manejador (handler) de servidor de archivos.
+  // Crea un manejador (handler) de servidor de archivos.
   fileServer := http.FileServer(http.Dir(staticDir))
 
-  // 3. Registra el manejador para que atienda todas las peticiones ("/").
+  // Registra el manejador para que atienda todas las peticiones ("/").
   http.Handle("/", fileServer)
 
-  // 4. Define el puerto y muestra un mensaje.
+  // Define el puerto y muestra un mensaje.
   port := ":8080"
   fmt.Printf("Servidor ESTÁTICO escuchando en http://localhost%s\n", port)
   fmt.Printf("Sirviendo archivos desde: %s\n", staticDir)
 
-  // 5. Inicia el servidor.
-  err := http.ListenAndServe(port, nil)
+  // Inicia el servidor.
+  err = http.ListenAndServe(port, nil)
   if err != nil {
     fmt.Printf("Error al iniciar el servidor: %s\n", err)
   }
