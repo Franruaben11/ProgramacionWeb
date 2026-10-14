@@ -6,10 +6,8 @@ import (
   "net/http"
   "log"
   "main.go/handlers"
-  
   // Driver de Postgres (el guion bajo es obligatorio para que funcione)
-	_ "github.com/lib/pq" 
-	
+	_ "github.com/lib/pq" 	
 	// Carpeta de sqlc
 	"main.go/db/sqlc"
 )
@@ -34,10 +32,19 @@ func main() {
   // Crear la instancia de sqlc (Se usará para los CRUD) 
   repo := db.New(dbConn)
   
+  /*
   // Crear el handler de enfermeros
   enfermeroHandler := handlers.NewEnfermeroHandler(repo)
-
+  
   http.HandleFunc("POST /enfermeros", enfermeroHandler.Create)
+  */
+  enfermeroHandler := handlers.NewEnfermeroHandler(repo)
+  enfermerosHandler := handlers.NewEnfermeroHandler(repo)
+  
+  // Configurar rutas
+  http.HandleFunc("/enfermeros", enfermerosHandler.EnfermerosHandler) 
+  http.HandleFunc("/enfermeros/", enfermeroHandler.EnfermeroHandler)   
+
 
   // Define el directorio que contiene los archivos estáticos.
   staticDir := "./static"
