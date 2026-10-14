@@ -28,9 +28,8 @@ func NewEnfermeroHandler(repo *db.Queries) *EnfermeroHandler {
 func (h *EnfermeroHandler) EnfermerosHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	
-	/*case http.MethodGet:
+	case http.MethodGet:
 		h.getAllEnfermeros(w, r)
-	*/
 	case http.MethodPost:
 		h.createEnfermero(w, r)
 	default:
@@ -94,39 +93,25 @@ func (h *EnfermeroHandler) createEnfermero(w http.ResponseWriter, r *http.Reques
     json.NewEncoder(w).Encode(enfermeroCreado)
 }
 
-/*
-// POST /enfermero - Crear nuevo producto
-func (h *EnfermeroHandler) createEnfermero(w http.ResponseWriter, r *http.Request) {
-	var newEnfermero Enfermero
+// GET /enfermero - Listar todos los enfermeros
+func (h *EnfermeroHandler) getAllEnfermeros(w http.ResponseWriter, r *http.Request) {
 
-	err := json.NewDecoder(r.Body).Decode(&newEnfermero)
+	// Llamamos a la función de sqlc para traer todos los registros
+    enfermeros, err := h.repo.ListEnfermeros(r.Context())
+    if err != nil {
+        http.Error(w, "Error al obtener los enfermeros de la base de datos: "+err.Error(), http.StatusInternalServerError)
+        return
+    }
 
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    json.NewEncoder(w).Encode(enfermeros)
 
-	//hacer get DB
-
-	//hardcodea DB
-	newEnfermero.ID = len(products) + 1
-	products = append(products, newEnfermero)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-
-	json.NewEncoder(w).Encode(newEnfermero)
 }
-*/
 
 
 /*
 																	CORREGIR DESP
-// GET /enfermero - Listar todos los enfermeros
-func (h *EnfermeroHandler) getAllEnfermeros(w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(products)
-}
-
 
 // GET /enfermero/{id} - Obtener enfermero específico
 func (h *EnfermeroHandler) getEnfermero(w http.ResponseWriter, r *http.Request, id int) {
