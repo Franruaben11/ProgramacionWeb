@@ -9,13 +9,8 @@ import (
 	db "main.go/db/sqlc"
 )
 
-// Paciente representa los datos recibidos en el JSON
-// (Ajustá los campos según las columnas de tu tabla 'pacientes' en PostgreSQL)
 type Paciente struct {
 	Nombre string `json:"nombre"`
-	// Si tu tabla tiene más campos (ej: Apellido, Dni, Edad, Habitacion), agregalos aquí:
-	// Edad       int    `json:"edad"`
-	// Habitacion string `json:"habitacion"`
 }
 
 type PacienteHandler struct {
@@ -40,7 +35,7 @@ func (h *PacienteHandler) PacientesHandler(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-// PacienteHandler maneja /pacientes/{id} (GET uno, PUT actualizar, DELETE eliminar)
+// PacienteHandler maneja /pacientes/{id}
 func (h *PacienteHandler) PacienteHandler(w http.ResponseWriter, r *http.Request) {
 	// Extraer ID del path (ej: "/pacientes/1" -> ["", "pacientes", "1"])
 	parts := strings.Split(r.URL.Path, "/")
@@ -80,7 +75,6 @@ func (h *PacienteHandler) createPaciente(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// Ajustá los parámetros según lo generado por sqlc en CreatePacienteParams
 	pacienteCreado, err := h.repo.CreatePaciente(r.Context(), newPaciente.Nombre)
 	if err != nil {
 		http.Error(w, "Error al guardar en la base de datos: "+err.Error(), http.StatusInternalServerError)
@@ -130,7 +124,6 @@ func (h *PacienteHandler) updatePaciente(w http.ResponseWriter, r *http.Request,
 		return
 	}
 
-	// Ajustá el nombre del campo ID (ej: ID o IDPaciente) según lo que generó sqlc
 	err = h.repo.UpdatePaciente(r.Context(), db.UpdatePacienteParams{
 		IDPaciente:     int32(id),
 		Nombre: updatedPaciente.Nombre,

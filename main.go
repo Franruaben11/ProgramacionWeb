@@ -36,6 +36,7 @@ func main() {
 	enfermeroHandler := handlers.NewEnfermeroHandler(repo)
   familiarHandler := handlers.NewFamiliarHandler(repo)
   pacienteHandler := handlers.NewPacienteHandler(repo)
+  avisoHandler := handlers.NewAvisoHandler(repo)
   
 
 	// Configurar rutas usando los métodos de la misma instancia
@@ -48,6 +49,8 @@ func main() {
 	http.HandleFunc("/pacientes", pacienteHandler.PacientesHandler)
 	http.HandleFunc("/pacientes/", pacienteHandler.PacienteHandler)
 
+  http.HandleFunc("/avisos", avisoHandler.AvisosHandler)
+  http.HandleFunc("/avisos/", avisoHandler.AvisoHandler)
 	
   // Define el directorio que contiene los archivos estáticos.
   staticDir := "./static"

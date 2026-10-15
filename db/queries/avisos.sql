@@ -5,11 +5,8 @@ SELECT * FROM Avisos WHERE id_aviso = $1;
 SELECT * FROM Avisos ORDER BY nombre;
 
 -- name: CreateAviso :one
-INSERT INTO Avisos (nombre, descripcion, id_paciente, id_enfermero) 
-VALUES ($1, $2, $3, $4) RETURNING *;
-
--- name: UpdateAviso :exec
-UPDATE Avisos SET nombre = $2, descripcion = $3, id_paciente = $4, id_enfermero = $5 WHERE id_aviso = $1;
+INSERT INTO avisos (nombre, descripcion, fecha_hora_inicio, fecha_hora_fin, id_paciente, id_enfermero)
+VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;
 
 -- name: DeleteAviso :exec
 DELETE FROM Avisos WHERE id_aviso = $1;

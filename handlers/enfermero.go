@@ -38,7 +38,6 @@ func (h *EnfermeroHandler) EnfermerosHandler(w http.ResponseWriter, r *http.Requ
 
 // EnfermeroHandler maneja las peticiones a /enfermeros/{id} (GET uno, PUT actualizar, DELETE eliminar)
 func (h *EnfermeroHandler) EnfermeroHandler(w http.ResponseWriter, r *http.Request) {
-	// Extraer ID del path (ej: "/enfermeros/1" -> ["", "enfermeros", "1"])
 	parts := strings.Split(r.URL.Path, "/")
 	if len(parts) != 3 || parts[2] == "" {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)

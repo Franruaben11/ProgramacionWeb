@@ -9,8 +9,6 @@ import (
 	db "main.go/db/sqlc"
 )
 
-// Familiar representa el modelo de datos que recibimos en el JSON
-// (Ajustá los campos según las columnas de tu tabla 'familiares' en PostgreSQL)
 type Familiar struct {
 	Nombre     string `json:"nombre"`
 	Contrasena string `json:"contrasena"`
@@ -40,7 +38,7 @@ func (h *FamiliarHandler) FamiliaresHandler(w http.ResponseWriter, r *http.Reque
 
 // FamiliarHandler maneja /familiares/{id} (GET uno, PUT actualizar, DELETE eliminar)
 func (h *FamiliarHandler) FamiliarHandler(w http.ResponseWriter, r *http.Request) {
-	// Extraer ID del path (ej: "/familiares/1" -> ["", "familiares", "1"])
+
 	parts := strings.Split(r.URL.Path, "/")
 	if len(parts) != 3 || parts[2] == "" {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
@@ -131,7 +129,6 @@ func (h *FamiliarHandler) updateFamiliar(w http.ResponseWriter, r *http.Request,
 		return
 	}
 
-	// Ajustá el nombre del campo del ID (ej: ID o IDFamiliar) según lo generado por sqlc
 	err := h.repo.UpdateFamiliar(r.Context(), db.UpdateFamiliarParams{
 		IDFamiliar:         int32(id),
 		Nombre:     updatedFamiliar.Nombre,

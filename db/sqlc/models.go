@@ -5,15 +5,17 @@
 package db
 
 import (
-	"database/sql"
+	"time"
 )
 
 type Aviso struct {
-	IDAviso     int32          `json:"id_aviso"`
-	Nombre      string         `json:"nombre"`
-	Descripcion sql.NullString `json:"descripcion"`
-	IDPaciente  int32          `json:"id_paciente"`
-	IDEnfermero int32          `json:"id_enfermero"`
+	IDAviso         int32     `json:"id_aviso"`
+	Nombre          string    `json:"nombre"`
+	Descripcion     string    `json:"descripcion"`
+	FechaHoraInicio time.Time `json:"fecha_hora_inicio"`
+	FechaHoraFin    time.Time `json:"fecha_hora_fin"`
+	IDPaciente      int32     `json:"id_paciente"`
+	IDEnfermero     int32     `json:"id_enfermero"`
 }
 
 type Enfermero struct {
