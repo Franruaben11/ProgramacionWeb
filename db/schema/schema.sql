@@ -23,7 +23,6 @@ CREATE TABLE Avisos (
     id_aviso SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
-    id_paciente INT REFERENCES Pacientes(id_paciente) ON DELETE CASCADE,
-    id_enfermero INT REFERENCES Enfermeros(id_enfermero) ON DELETE CASCADE
+    id_paciente INT NOT NULL REFERENCES Pacientes(id_paciente) ON DELETE CASCADE,
+    id_enfermero INT NOT NULL REFERENCES Enfermeros(id_enfermero) ON DELETE CASCADE
 );
-

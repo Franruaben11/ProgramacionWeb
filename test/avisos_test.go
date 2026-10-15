@@ -29,8 +29,8 @@ func TestAvisoCRUD(t *testing.T) {
 	aviso, err := q.CreateAviso(ctx, dbsqlc.CreateAvisoParams{
 		Nombre:      "Control de presion",
 		Descripcion: sql.NullString{String: "Tomar presion a las 10am", Valid: true},
-		IDPaciente:  sql.NullInt32{Int32: pac.IDPaciente, Valid: true},
-		IDEnfermero: sql.NullInt32{Int32: enf.IDEnfermero, Valid: true},
+		IDPaciente:  pac.IDPaciente,
+		IDEnfermero: enf.IDEnfermero,
 	})
 	if err != nil {
 		t.Fatalf("Error al crear aviso: %v", err)
@@ -45,8 +45,8 @@ func TestAvisoCRUD(t *testing.T) {
 		IDAviso:     aviso.IDAviso,
 		Nombre:      "Control de presion (Urgente)",
 		Descripcion: sql.NullString{String: "Tomar presion AHORA", Valid: true},
-		IDPaciente:  sql.NullInt32{Int32: pac.IDPaciente, Valid: true},
-		IDEnfermero: sql.NullInt32{Int32: enf.IDEnfermero, Valid: true},
+		IDPaciente:  pac.IDPaciente,
+		IDEnfermero: enf.IDEnfermero,
 	})
 	if err != nil {
 		t.Fatalf("Error al actualizar aviso: %v", err)

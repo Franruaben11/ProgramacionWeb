@@ -12,8 +12,8 @@ type Aviso struct {
 	IDAviso     int32          `json:"id_aviso"`
 	Nombre      string         `json:"nombre"`
 	Descripcion sql.NullString `json:"descripcion"`
-	IDPaciente  sql.NullInt32  `json:"id_paciente"`
-	IDEnfermero sql.NullInt32  `json:"id_enfermero"`
+	IDPaciente  int32          `json:"id_paciente"`
+	IDEnfermero int32          `json:"id_enfermero"`
 }
 
 type Enfermero struct {
