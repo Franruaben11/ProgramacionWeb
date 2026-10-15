@@ -22,10 +22,6 @@ func TestAvisoCRUD(t *testing.T) {
 		t.Fatalf("Error al crear paciente para aviso: %v", err)
 	}
 
-	act, err := q.CreateActividad(ctx, dbsqlc.CreateActividadParams{
-		NombreActividad: "Control de Presion",
-		Descripcion:     sql.NullString{String: "Medicion de presion", Valid: true},
-	})
 	if err != nil {
 		t.Fatalf("Error al crear actividad para aviso: %v", err)
 	}
@@ -33,7 +29,6 @@ func TestAvisoCRUD(t *testing.T) {
 	aviso, err := q.CreateAviso(ctx, dbsqlc.CreateAvisoParams{
 		Nombre:      "Control de presion",
 		Descripcion: sql.NullString{String: "Tomar presion a las 10am", Valid: true},
-		IDActividad: sql.NullInt32{Int32: act.IDActividad, Valid: true},
 		IDPaciente:  sql.NullInt32{Int32: pac.IDPaciente, Valid: true},
 		IDEnfermero: sql.NullInt32{Int32: enf.IDEnfermero, Valid: true},
 	})
@@ -50,7 +45,6 @@ func TestAvisoCRUD(t *testing.T) {
 		IDAviso:     aviso.IDAviso,
 		Nombre:      "Control de presion (Urgente)",
 		Descripcion: sql.NullString{String: "Tomar presion AHORA", Valid: true},
-		IDActividad: sql.NullInt32{Int32: act.IDActividad, Valid: true},
 		IDPaciente:  sql.NullInt32{Int32: pac.IDPaciente, Valid: true},
 		IDEnfermero: sql.NullInt32{Int32: enf.IDEnfermero, Valid: true},
 	})

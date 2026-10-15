@@ -8,17 +8,10 @@ import (
 	"database/sql"
 )
 
-type Actividade struct {
-	IDActividad     int32          `json:"id_actividad"`
-	NombreActividad string         `json:"nombre_actividad"`
-	Descripcion     sql.NullString `json:"descripcion"`
-}
-
 type Aviso struct {
 	IDAviso     int32          `json:"id_aviso"`
 	Nombre      string         `json:"nombre"`
 	Descripcion sql.NullString `json:"descripcion"`
-	IDActividad sql.NullInt32  `json:"id_actividad"`
 	IDPaciente  sql.NullInt32  `json:"id_paciente"`
 	IDEnfermero sql.NullInt32  `json:"id_enfermero"`
 }
