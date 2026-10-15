@@ -85,7 +85,6 @@ func (h *EnfermeroHandler) createEnfermero(w http.ResponseWriter, r *http.Reques
         return
     }
 
-    // 3. Responder con el objeto creado devuelto por la base de datos
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusCreated)
     json.NewEncoder(w).Encode(enfermeroCreado)
@@ -119,6 +118,7 @@ func (h *EnfermeroHandler) getEnfermero(w http.ResponseWriter, r *http.Request, 
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(enfermero)
 }
 

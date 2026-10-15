@@ -32,13 +32,23 @@ func main() {
 	// Crear la instancia de sqlc (Se usará para los CRUD)
 	repo := db.New(dbConn)
 
-	// Crear una única instancia del handler de enfermeros
+	// Crear los handlers
 	enfermeroHandler := handlers.NewEnfermeroHandler(repo)
+  familiarHandler := handlers.NewFamiliarHandler(repo)
+  pacienteHandler := handlers.NewPacienteHandler(repo)
+  
 
 	// Configurar rutas usando los métodos de la misma instancia
 	http.HandleFunc("/enfermeros", enfermeroHandler.EnfermerosHandler)
 	http.HandleFunc("/enfermeros/", enfermeroHandler.EnfermeroHandler)
+  
+  http.HandleFunc("/familiares", familiarHandler.FamiliaresHandler)
+	http.HandleFunc("/familiares/", familiarHandler.FamiliarHandler)
 
+	http.HandleFunc("/pacientes", pacienteHandler.PacientesHandler)
+	http.HandleFunc("/pacientes/", pacienteHandler.PacienteHandler)
+
+	
   // Define el directorio que contiene los archivos estáticos.
   staticDir := "./static"
 
