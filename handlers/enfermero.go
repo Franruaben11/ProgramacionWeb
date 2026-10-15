@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 	db "main.go/db/sqlc"
-	//"strings"
-	//"strconv"
+	"strings"
+	"strconv"
 )
 
 type Enfermero struct {
-	Nombre  string  `json:"nombre"`
+	Nombre     string `json:"nombre"`
 	Contrasena string `json:"contrasena"`
 }
 
@@ -24,10 +24,9 @@ func NewEnfermeroHandler(repo *db.Queries) *EnfermeroHandler {
 }
 
 
-// Manejador para /enfermero
+// EnfermerosHandler maneja las peticiones a /enfermeros (GET todos, POST crear)
 func (h *EnfermeroHandler) EnfermerosHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	
 	case http.MethodGet:
 		h.getAllEnfermeros(w, r)
 	case http.MethodPost:
@@ -37,13 +36,11 @@ func (h *EnfermeroHandler) EnfermerosHandler(w http.ResponseWriter, r *http.Requ
 	}
 }
 
-
-// Manejador para /enfermero/{id}
+// EnfermeroHandler maneja las peticiones a /enfermeros/{id} (GET uno, PUT actualizar, DELETE eliminar)
 func (h *EnfermeroHandler) EnfermeroHandler(w http.ResponseWriter, r *http.Request) {
-	/*
-	// Extraer ID del path
+	// Extraer ID del path (ej: "/enfermeros/1" -> ["", "enfermeros", "1"])
 	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) != 3 {
+	if len(parts) != 3 || parts[2] == "" {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
 		return
 	}
@@ -53,7 +50,7 @@ func (h *EnfermeroHandler) EnfermeroHandler(w http.ResponseWriter, r *http.Reque
 		http.Error(w, "Invalid enfermero ID", http.StatusBadRequest)
 		return
 	}
-	
+
 	switch r.Method {
 	case http.MethodGet:
 		h.getEnfermero(w, r, id)
@@ -64,8 +61,9 @@ func (h *EnfermeroHandler) EnfermeroHandler(w http.ResponseWriter, r *http.Reque
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
-		*/
 }
+
+
 
 func (h *EnfermeroHandler) createEnfermero(w http.ResponseWriter, r *http.Request) {
 	var newEnfermero Enfermero
@@ -110,13 +108,10 @@ func (h *EnfermeroHandler) getAllEnfermeros(w http.ResponseWriter, r *http.Reque
 }
 
 
-/*
-																	CORREGIR DESP
-
 // GET /enfermero/{id} - Obtener enfermero específico
 func (h *EnfermeroHandler) getEnfermero(w http.ResponseWriter, r *http.Request, id int) {
 
-	product, err := findProductByID(id)
+	enfermero, err := h.repo.GetEnfermero(r.Context(), int32(id))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -124,8 +119,9 @@ func (h *EnfermeroHandler) getEnfermero(w http.ResponseWriter, r *http.Request, 
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(product)
+	json.NewEncoder(w).Encode(enfermero)
 }
+
 
 // PUT /enfermero/{id} - Actualizar enfermero
 func (h *EnfermeroHandler) updateEnfermero(w http.ResponseWriter, r *http.Request, id int) {
@@ -137,16 +133,18 @@ func (h *EnfermeroHandler) updateEnfermero(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	index, err := findProductIndexByID(id)
+	err = h.repo.UpdateEnfermero(r.Context(), db.UpdateEnfermeroParams{
+		IDEnfermero:         int32(id),
+		Nombre:     updatedEnfermero.Nombre,
+		Contrasena: updatedEnfermero.Contrasena,
+	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
-	// Mantener el ID original
-	updatedEnfermero.ID = id
-	products[index] = updatedEnfermero
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(updatedEnfermero)
 }
 
@@ -154,55 +152,13 @@ func (h *EnfermeroHandler) updateEnfermero(w http.ResponseWriter, r *http.Reques
 
 // DELETE /enfermero/{id} - Eliminar enfermero
 func (h *EnfermeroHandler) deleteEnfermero(w http.ResponseWriter, r *http.Request, id int) {
-	index, err := findProductIndexByID(id)
+	
+	err := h.repo.DeleteEnfermero(r.Context(), int32(id))
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		http.Error(w, "Error al eliminar el enfermero: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	products = append(products[:index], products[index+1:]...)
 	w.WriteHeader(http.StatusNoContent)
 }
-
-func (h *EnfermeroHandler) findProductByID(id int) (*Enfermero, error) {
-	for i := range products {
-		if products[i].ID == id {
-			return &products[i], nil
-		}
-	}
-	return nil, errors.New("product not found")
-}
-
-// Funciones auxiliares
-func findProductIndexByID(id int) (int, error) {
-	for i, p := range products {
-		if p.ID == id {
-			return i, nil
-		}
-	}
-	return -1, errors.New("product not found")
-}
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
