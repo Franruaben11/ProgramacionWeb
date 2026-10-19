@@ -1,8 +1,96 @@
-<!DOCTYPE html>
-<html>
-<head><title>Geriatrico La Casa Del Angel</title></head>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Panel de gestión del geriátrico La Casa del Ángel">
+  <title>La Casa del Ángel | Inicio</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
 <body>
-  <h1>Bienvenido al geriatrico La Casa Del Angel</h1>
-  <p>Esta es una aplicacion donde se va a registrar el cronograma diario de los pacientes del geriatrico La Casa Del Angel</p>
+  <header class="site-header">
+    <div class="container header-content">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">LC</span>
+        <span>
+          <strong>La Casa del Ángel</strong>
+          <small>Gestión geriátrica</small>
+        </span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="#secciones">Secciones</a>
+        <a href="#informacion">Información</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-content">
+        <p class="eyebrow">Panel de gestión</p>
+        <h1>Información clara para el cuidado diario.</h1>
+        <p class="hero-text">
+          Accedé rápidamente a los registros de pacientes, personal, familiares y avisos
+          de la residencia.
+        </p>
+        <a class="button button-primary" href="#secciones">Ver secciones</a>
+      </div>
+    </section>
+
+    <section class="container section" id="secciones">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Administración</p>
+          <h2>Secciones principales</h2>
+        </div>
+        <p class="section-intro">Consultá los registros disponibles en la aplicación.</p>
+      </div>
+
+      <div class="cards">
+        <a class="card" href="/pacientes">
+          <span class="card-number">01</span>
+          <h3>Pacientes</h3>
+          <p>Consultar la información de las personas residentes.</p>
+          <span class="card-link">Ver registros <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="card" href="/enfermeros">
+          <span class="card-number">02</span>
+          <h3>Enfermeros</h3>
+          <p>Acceder al registro del personal de enfermería.</p>
+          <span class="card-link">Ver registros <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="card" href="/familiares">
+          <span class="card-number">03</span>
+          <h3>Familiares</h3>
+          <p>Consultar las personas vinculadas a cada paciente.</p>
+          <span class="card-link">Ver registros <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="card" href="/avisos">
+          <span class="card-number">04</span>
+          <h3>Avisos</h3>
+          <p>Revisar las actividades y comunicaciones registradas.</p>
+          <span class="card-link">Ver registros <span aria-hidden="true">→</span></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="container information" id="informacion">
+      <div>
+        <p class="eyebrow">Sobre el sistema</p>
+        <h2>Un espacio simple y ordenado.</h2>
+      </div>
+      <p>
+        La aplicación centraliza la información cotidiana para facilitar el seguimiento
+        de cada paciente y mantener una comunicación organizada con sus familiares.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <span>La Casa del Ángel</span>
+      <span>Panel de gestión</span>
+    </div>
+  </footer>
 </body>
 </html>
