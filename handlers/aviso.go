@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
@@ -145,6 +147,11 @@ func (h *AvisoHandler) getAviso(w http.ResponseWriter, r *http.Request, id int) 
 	aviso, err := h.repo.GetAviso(r.Context(), int32(id))
 	
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			http.Error(w, "Aviso no encontrado", http.StatusNotFound)
+			return
+		}
+
 		http.Error(w, "Error al buscar el aviso: "+err.Error(), http.StatusInternalServerError)
 		return
 	}

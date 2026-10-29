@@ -1,6 +1,25 @@
-# Trabajo Web
+# Trabajo Web - La Casa del Ángel
 
-Aplicación web para que los familiares se mantengan informados sobre el día a día del paciente. También permite que los enfermeros registren actividades y envíen avisos a los familiares.
+## Descripción del proyecto
+
+La Casa del Ángel es una aplicación web para gestionar y comunicar la
+información cotidiana de una residencia geriátrica.
+
+El sistema está pensado para el personal de enfermería y los familiares de los
+pacientes. En una residencia, la información sobre las actividades diarias
+puede quedar distribuida en distintos medios o comunicarse de manera informal.
+Esto dificulta el seguimiento de cada paciente y puede provocar confusiones
+entre las personas responsables de su cuidado y sus familiares.
+
+La aplicación centraliza en un único lugar los datos de pacientes, enfermeros,
+familiares y avisos. Los enfermeros pueden registrar actividades con su
+descripción y horario, asociándolas al paciente correspondiente. Los familiares
+pueden consultar esa información para conocer las actividades realizadas
+durante el día.
+
+De esta manera, el proyecto busca mejorar la organización de la residencia,
+facilitar el seguimiento de cada paciente y favorecer una comunicación más
+clara entre el personal de cuidado y sus familiares.
 
 ## Requisitos
 
@@ -59,6 +78,21 @@ Las pruebas cubren las operaciones válidas disponibles para:
 - Familiares: POST, GET general, GET por ID, PUT y DELETE.
 - Avisos: POST, GET general, GET por ID y DELETE.
 
+Además de comprobar que las peticiones finalicen correctamente, `requests.sh`
+valida explícitamente:
+
+- el código HTTP esperado para cada operación;
+- atributos relevantes del JSON recibido;
+- los identificadores devueltos por las operaciones de creación;
+- que las actualizaciones queden persistidas al consultar nuevamente el recurso;
+- que una eliminación devuelva `204` y que el recurso deje de estar disponible;
+- errores por JSON inválido, campos obligatorios faltantes, fechas inválidas,
+  métodos no permitidos e identificadores inexistentes.
+
+Los identificadores se obtienen de las respuestas de creación, por lo que las
+pruebas no dependen de que la base de datos comience a numerar registros desde
+`1`.
+
 Para ejecutar solamente el flujo de pruebas de la API:
 
 ```bash
@@ -89,9 +123,28 @@ En ese caso, PostgreSQL debe estar disponible localmente, por ejemplo mediante:
 make db-up
 ```
 
+## Funcionamiento principal
+
+El flujo de uso de la aplicación es el siguiente:
+
+1. Se registran los pacientes que viven en la residencia.
+2. Se registran los enfermeros responsables de su cuidado.
+3. Se registran los familiares vinculados a los pacientes.
+4. Un enfermero crea un aviso para registrar una actividad o situación
+   relacionada con un paciente.
+5. El aviso incluye una descripción, un horario, el paciente involucrado y el
+   enfermero responsable.
+6. La información puede consultarse posteriormente para realizar el
+   seguimiento diario del paciente.
+
 ## Entidades principales
 
-- **Enfermero:** nombre, identificador y contraseña.
-- **Paciente:** nombre e identificador.
-- **Familiar:** nombre, identificador y contraseña.
-- **Aviso:** nombre, identificador, descripción, paciente asociado y enfermero asociado.
+- **Paciente:** persona residente de la institución. Se registra su nombre y se
+  utiliza como referencia para asociar actividades y avisos.
+- **Enfermero:** integrante del personal de enfermería que registra
+  información sobre las actividades realizadas para un paciente.
+- **Familiar:** persona vinculada a un paciente que necesita consultar
+  información sobre sus actividades diarias.
+- **Aviso:** actividad o comunicación asociada a un paciente y registrada por un
+  enfermero. Incluye nombre, descripción, fecha y horario, paciente relacionado
+  y enfermero responsable.
