@@ -1,4 +1,4 @@
-.PHONY: up generate down logs db-up db-reset test test-api test-reset build fmt
+.PHONY: up generate generate-templ down logs db-up db-reset test test-api test-reset build fmt
 
 COMPOSE := docker compose
 DB_SERVICE := database
@@ -7,8 +7,11 @@ SQLC_IMAGE := sqlc/sqlc:1.31.1
 up: generate
 	$(COMPOSE) up -d --build
 
-generate:
+generate: generate-templ
 	docker run --rm -v "$$(pwd):/src" -w /src $(SQLC_IMAGE) generate
+
+generate-templ:
+	go run github.com/a-h/templ/cmd/templ@v0.3.977 generate
 
 down:
 	$(COMPOSE) down

@@ -3,7 +3,8 @@
 set -eu
 
 BASE_URL="${BASE_URL:-http://localhost:8080}"
-RESPONSE_FILE="$(mktemp)"
+API_BASE_URL="${BASE_URL%/}/api"
+RESPONSE_FILE=".requests-response.$$"
 trap 'rm -f "$RESPONSE_FILE"' EXIT
 
 request() {
@@ -46,89 +47,89 @@ get_id() {
 }
 
 echo "=== ENFERMEROS ==="
-request -X POST "$BASE_URL/enfermeros" \
+request -X POST "$API_BASE_URL/enfermeros" \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Carlos Gomez","contrasena":"clave123"}'
 check_status 201
 check_body_contains '"nombre":"Carlos Gomez"'
 id_enfermero="$(get_id "id_enfermero")"
 
-request "$BASE_URL/enfermeros"
+request "$API_BASE_URL/enfermeros"
 check_status 200
 check_body_contains "\"id_enfermero\":$id_enfermero"
 check_body_contains '"nombre":"Carlos Gomez"'
 
-request "$BASE_URL/enfermeros/$id_enfermero"
+request "$API_BASE_URL/enfermeros/$id_enfermero"
 check_status 200
 check_body_contains "\"id_enfermero\":$id_enfermero"
 check_body_contains '"nombre":"Carlos Gomez"'
 
-request -X PUT "$BASE_URL/enfermeros/$id_enfermero" \
+request -X PUT "$API_BASE_URL/enfermeros/$id_enfermero" \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Carlos Alberto Gomez","contrasena":"nuevaclave456"}'
 check_status 200
 check_body_contains '"nombre":"Carlos Alberto Gomez"'
 
-request "$BASE_URL/enfermeros/$id_enfermero"
+request "$API_BASE_URL/enfermeros/$id_enfermero"
 check_status 200
 check_body_contains '"nombre":"Carlos Alberto Gomez"'
 
 echo "=== PACIENTES ==="
-request -X POST "$BASE_URL/pacientes" \
+request -X POST "$API_BASE_URL/pacientes" \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Juan Perez"}'
 check_status 201
 check_body_contains '"nombre":"Juan Perez"'
 id_paciente="$(get_id "id_paciente")"
 
-request "$BASE_URL/pacientes"
+request "$API_BASE_URL/pacientes"
 check_status 200
 check_body_contains "\"id_paciente\":$id_paciente"
 check_body_contains '"nombre":"Juan Perez"'
 
-request "$BASE_URL/pacientes/$id_paciente"
+request "$API_BASE_URL/pacientes/$id_paciente"
 check_status 200
 check_body_contains '"nombre":"Juan Perez"'
 
-request -X PUT "$BASE_URL/pacientes/$id_paciente" \
+request -X PUT "$API_BASE_URL/pacientes/$id_paciente" \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Juan Carlos Perez"}'
 check_status 200
 check_body_contains '"nombre":"Juan Carlos Perez"'
 
-request "$BASE_URL/pacientes/$id_paciente"
+request "$API_BASE_URL/pacientes/$id_paciente"
 check_status 200
 check_body_contains '"nombre":"Juan Carlos Perez"'
 
 echo "=== FAMILIARES ==="
-request -X POST "$BASE_URL/familiares" \
+request -X POST "$API_BASE_URL/familiares" \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Maria Gomez","contrasena":"clave123"}'
 check_status 201
 check_body_contains '"nombre":"Maria Gomez"'
 id_familiar="$(get_id "id_familiar")"
 
-request "$BASE_URL/familiares"
+request "$API_BASE_URL/familiares"
 check_status 200
 check_body_contains "\"id_familiar\":$id_familiar"
 check_body_contains '"nombre":"Maria Gomez"'
 
-request "$BASE_URL/familiares/$id_familiar"
+request "$API_BASE_URL/familiares/$id_familiar"
 check_status 200
 check_body_contains '"nombre":"Maria Gomez"'
 
-request -X PUT "$BASE_URL/familiares/$id_familiar" \
+request -X PUT "$API_BASE_URL/familiares/$id_familiar" \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Maria Elena Gomez","contrasena":"otraclave789"}'
 check_status 200
 check_body_contains '"nombre":"Maria Elena Gomez"'
 
-request "$BASE_URL/familiares/$id_familiar"
+request "$API_BASE_URL/familiares/$id_familiar"
 check_status 200
 check_body_contains '"nombre":"Maria Elena Gomez"'
 
 echo "=== AVISOS ==="
-request -X POST "$BASE_URL/avisos" \
+request -X POST "$API_BASE_URL/avisos" \
   -H "Content-Type: application/json" \
   -d '{
     "nombre":"Desayuno y medicacion",
@@ -145,30 +146,30 @@ check_body_contains "\"id_paciente\":$id_paciente"
 check_body_contains "\"id_enfermero\":$id_enfermero"
 id_aviso="$(get_id "id_aviso")"
 
-request "$BASE_URL/avisos"
+request "$API_BASE_URL/avisos"
 check_status 200
 check_body_contains "\"id_aviso\":$id_aviso"
 check_body_contains '"descripcion":"Te con galletitas"'
 
-request "$BASE_URL/avisos/$id_aviso"
+request "$API_BASE_URL/avisos/$id_aviso"
 check_status 200
 check_body_contains '"nombre":"Desayuno y medicacion"'
 check_body_contains '"descripcion":"Te con galletitas"'
 
 echo "=== VALIDACIONES DE ERROR ==="
-request -X POST "$BASE_URL/avisos" \
+request -X POST "$API_BASE_URL/avisos" \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Aviso incompleto"}'
 check_status 400
 check_body_contains "descripcion"
 
-request -X POST "$BASE_URL/avisos" \
+request -X POST "$API_BASE_URL/avisos" \
   -H "Content-Type: application/json" \
   -d 'JSON invalido'
 check_status 400
 check_body_contains "JSON"
 
-request -X POST "$BASE_URL/avisos" \
+request -X POST "$API_BASE_URL/avisos" \
   -H "Content-Type: application/json" \
   -d '{
     "nombre":"Horario invalido",
@@ -181,33 +182,33 @@ request -X POST "$BASE_URL/avisos" \
 check_status 400
 check_body_contains "fecha_hora_fin"
 
-request -X PATCH "$BASE_URL/pacientes/$id_paciente"
+request -X PATCH "$API_BASE_URL/pacientes/$id_paciente"
 check_status 405
 check_body_contains "Method not allowed"
 
-request "$BASE_URL/pacientes/999999999"
+request "$API_BASE_URL/pacientes/999999999"
 check_status 404
 
 echo "=== ELIMINACION ==="
-request -X DELETE "$BASE_URL/avisos/$id_aviso"
+request -X DELETE "$API_BASE_URL/avisos/$id_aviso"
 check_status 204
 
-request "$BASE_URL/avisos/$id_aviso"
+request "$API_BASE_URL/avisos/$id_aviso"
 check_status 404
 
-request -X DELETE "$BASE_URL/familiares/$id_familiar"
+request -X DELETE "$API_BASE_URL/familiares/$id_familiar"
 check_status 204
-request "$BASE_URL/familiares/$id_familiar"
+request "$API_BASE_URL/familiares/$id_familiar"
 check_status 404
 
-request -X DELETE "$BASE_URL/pacientes/$id_paciente"
+request -X DELETE "$API_BASE_URL/pacientes/$id_paciente"
 check_status 204
-request "$BASE_URL/pacientes/$id_paciente"
+request "$API_BASE_URL/pacientes/$id_paciente"
 check_status 404
 
-request -X DELETE "$BASE_URL/enfermeros/$id_enfermero"
+request -X DELETE "$API_BASE_URL/enfermeros/$id_enfermero"
 check_status 204
-request "$BASE_URL/enfermeros/$id_enfermero"
+request "$API_BASE_URL/enfermeros/$id_enfermero"
 check_status 404
 
 echo "Pruebas de la API finalizadas correctamente."

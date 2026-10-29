@@ -1,0 +1,45 @@
+package forms
+
+import (
+	"fmt"
+	"main.go/views/layout"
+	db "main.go/db/sqlc"
+)
+
+templ Paciente() { @layout.Page("Nuevo paciente", pacienteForm()) }
+templ pacienteForm() { <form method="post" action="/web/pacientes"><label>Nombre<input name="nombre" required/></label><button type="submit">Guardar</button></form> }
+
+templ Enfermero() { @layout.Page("Nuevo enfermero", enfermeroForm()) }
+templ enfermeroForm() { <form method="post" action="/web/enfermeros"><label>Nombre<input name="nombre" required/></label><label>Contraseña<input type="password" name="contrasena" required/></label><button type="submit">Guardar</button></form> }
+
+templ Familiar() { @layout.Page("Nuevo familiar", familiarForm()) }
+templ familiarForm() { <form method="post" action="/web/familiares"><label>Nombre<input name="nombre" required/></label><label>Contraseña<input type="password" name="contrasena" required/></label><button type="submit">Guardar</button></form> }
+
+templ Aviso(pacientes []db.Paciente, enfermeros []db.Enfermero) {
+	@layout.Page("Nuevo aviso", avisoForm(pacientes, enfermeros))
+}
+templ avisoForm(pacientes []db.Paciente, enfermeros []db.Enfermero) {
+	<form method="post" action="/web/avisos">
+		<label>Nombre<input name="nombre" required/></label>
+		<label>Descripción<textarea name="descripcion" required></textarea></label>
+		<label>Inicio<input type="datetime-local" name="fecha_hora_inicio" required/></label>
+		<label>Fin<input type="datetime-local" name="fecha_hora_fin" required/></label>
+		<label>Paciente
+			<select name="id_paciente" required>
+				<option value="">Seleccionar paciente</option>
+				for _, paciente := range pacientes {
+					<option value={ fmt.Sprint(paciente.IDPaciente) }>{ paciente.Nombre }</option>
+				}
+			</select>
+		</label>
+		<label>Enfermero
+			<select name="id_enfermero" required>
+				<option value="">Seleccionar enfermero</option>
+				for _, enfermero := range enfermeros {
+					<option value={ fmt.Sprint(enfermero.IDEnfermero) }>{ enfermero.Nombre }</option>
+				}
+			</select>
+		</label>
+		<button type="submit">Guardar</button>
+	</form>
+}

@@ -48,6 +48,7 @@ git pull
 
 ```bash
 make generate    # Genera el código Go de sqlc usando Docker
+make generate-templ # Genera las vistas SSR a partir de archivos .templ
 make up          # Genera sqlc, construye y levanta la aplicación
 make down        # Detiene y elimina los contenedores
 make logs        # Muestra los logs de los contenedores
@@ -110,6 +111,35 @@ make up
 ```
 
 La aplicación queda disponible en [http://localhost:8080](http://localhost:8080) y PostgreSQL en el puerto `5432`.
+
+La Fase 2 agrega vistas SSR con templ bajo `/web` (inicio, listados y
+formularios de pacientes, enfermeros, familiares y avisos). La API JSON se
+mantiene separada bajo `/api/...` y el frontend TP4 continúa disponible en
+`/static/index.html` (servido como `/`).
+
+## Arquitectura y rutas
+
+- **API JSON:** `/api/pacientes`, `/api/enfermeros`, `/api/familiares` y
+  `/api/avisos`, incluyendo sus rutas por ID. El frontend TP4 consume estas
+  rutas con `fetch`.
+- **Compatibilidad:** las rutas antiguas sin `/api` continúan disponibles
+  durante la transición.
+- **Interfaz SSR:** `/web`, `/web/pacientes`, `/web/enfermeros`,
+  `/web/familiares` y `/web/avisos`. Los formularios de alta se encuentran en
+  `/web/<entidad>/nuevo` y redirigen con `303 See Other` después de crear.
+- **Frontend TP4:** `/` sirve el panel estático que carga los registros en el
+  navegador y permite crear y eliminar datos sin recargar la página.
+
+La API y las páginas SSR comparten la misma capa de datos generada por sqlc.
+Las vistas SSR se generan desde archivos `.templ` con:
+
+```bash
+make generate-templ
+```
+
+La autenticación no forma parte de esta versión; el objetivo actual es
+demostrar persistencia, consumo de API, manipulación del DOM y renderizado
+server-side.
 
 También se puede iniciar la aplicación directamente con Go desde la raíz del proyecto:
 

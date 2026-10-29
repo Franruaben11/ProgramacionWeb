@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Panel de gestión del geriátrico La Casa del Ángel">
-  <title>La Casa del Ángel | Inicio</title>
+  <title>La Casa del Ángel | Panel</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -18,7 +18,7 @@
         </span>
       </a>
       <nav aria-label="Navegación principal">
-        <a href="#secciones">Secciones</a>
+        <a href="#panel">Panel</a>
         <a href="#informacion">Información</a>
       </nav>
     </div>
@@ -33,44 +33,49 @@
           Accedé rápidamente a los registros de pacientes, personal, familiares y avisos
           de la residencia.
         </p>
-        <a class="button button-primary" href="#secciones">Ver secciones</a>
+        <a class="button button-primary" href="#panel">Abrir panel</a>
       </div>
     </section>
 
-    <section class="container section" id="secciones">
+    <section class="container section dashboard" id="panel">
       <div class="section-heading">
         <div>
           <p class="eyebrow">Administración</p>
-          <h2>Secciones principales</h2>
+          <h2>Registros de la residencia</h2>
         </div>
-        <p class="section-intro">Consultá los registros disponibles en la aplicación.</p>
+        <p class="section-intro">Cargá, consultá y eliminá información desde un único lugar.</p>
       </div>
 
-      <div class="cards">
-        <a class="card" href="/pacientes">
-          <span class="card-number">01</span>
-          <h3>Pacientes</h3>
-          <p>Consultar la información de las personas residentes.</p>
-          <span class="card-link">Ver registros <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="card" href="/enfermeros">
-          <span class="card-number">02</span>
-          <h3>Enfermeros</h3>
-          <p>Acceder al registro del personal de enfermería.</p>
-          <span class="card-link">Ver registros <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="card" href="/familiares">
-          <span class="card-number">03</span>
-          <h3>Familiares</h3>
-          <p>Consultar las personas vinculadas a cada paciente.</p>
-          <span class="card-link">Ver registros <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="card" href="/avisos">
-          <span class="card-number">04</span>
-          <h3>Avisos</h3>
-          <p>Revisar las actividades y comunicaciones registradas.</p>
-          <span class="card-link">Ver registros <span aria-hidden="true">→</span></span>
-        </a>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+      <div class="dashboard-grid">
+        <section class="panel-card" id="pacientes-panel">
+          <div class="panel-heading"><h3>Pacientes</h3><span class="badge" id="pacientes-count">0</span></div>
+          <form class="inline-form" data-form="pacientes"><label for="paciente-nombre">Nombre</label><input id="paciente-nombre" name="nombre" required><button class="button button-primary" type="submit">Agregar</button></form>
+          <ul class="record-list" id="pacientes-list"></ul>
+        </section>
+        <section class="panel-card" id="enfermeros-panel">
+          <div class="panel-heading"><h3>Enfermeros</h3><span class="badge" id="enfermeros-count">0</span></div>
+          <form class="stack-form" data-form="enfermeros"><label for="enfermero-nombre">Nombre</label><input id="enfermero-nombre" name="nombre" required><label for="enfermero-contrasena">Contraseña</label><input id="enfermero-contrasena" name="contrasena" type="password" required><button class="button button-primary" type="submit">Agregar enfermero</button></form>
+          <ul class="record-list" id="enfermeros-list"></ul>
+        </section>
+        <section class="panel-card" id="familiares-panel">
+          <div class="panel-heading"><h3>Familiares</h3><span class="badge" id="familiares-count">0</span></div>
+          <form class="stack-form" data-form="familiares"><label for="familiar-nombre">Nombre</label><input id="familiar-nombre" name="nombre" required><label for="familiar-contrasena">Contraseña</label><input id="familiar-contrasena" name="contrasena" type="password" required><button class="button button-primary" type="submit">Agregar familiar</button></form>
+          <ul class="record-list" id="familiares-list"></ul>
+        </section>
+        <section class="panel-card panel-card-wide" id="avisos-panel">
+          <div class="panel-heading"><h3>Avisos</h3><span class="badge" id="avisos-count">0</span></div>
+          <form class="notice-form" data-form="avisos">
+            <label for="aviso-nombre">Título</label><input id="aviso-nombre" name="nombre" required>
+            <label for="aviso-descripcion">Descripción</label><textarea id="aviso-descripcion" name="descripcion" rows="2" required></textarea>
+            <label for="aviso-inicio">Inicio</label><input id="aviso-inicio" name="fecha_hora_inicio" type="datetime-local" required>
+            <label for="aviso-fin">Fin</label><input id="aviso-fin" name="fecha_hora_fin" type="datetime-local" required>
+            <label for="aviso-paciente">Paciente</label><select id="aviso-paciente" name="id_paciente" required><option value="">Seleccioná un paciente</option></select>
+            <label for="aviso-enfermero">Enfermero</label><select id="aviso-enfermero" name="id_enfermero" required><option value="">Seleccioná un enfermero</option></select>
+            <button class="button button-primary" type="submit">Publicar aviso</button>
+          </form>
+          <ul class="record-list" id="avisos-list"></ul>
+        </section>
       </div>
     </section>
 
@@ -92,5 +97,6 @@
       <span>Panel de gestión</span>
     </div>
   </footer>
+  <script type="module" src="/js/app.js"></script>
 </body>
 </html>

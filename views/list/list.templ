@@ -1,0 +1,47 @@
+package list
+
+import (
+ "fmt"
+ db "main.go/db/sqlc"
+ "main.go/views/layout"
+)
+
+templ Pacientes(items []db.Paciente) { @layout.Page("Pacientes", pacienteList(items)) }
+templ pacienteList(items []db.Paciente) {
+<a class="button" href="/web/pacientes/nuevo">Nuevo paciente</a>
+<table><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
+for _, item := range items {
+<tr><td>{ fmt.Sprint(item.IDPaciente) }</td><td>{ item.Nombre }</td><td><form method="post" action={ "/web/pacientes/" + fmt.Sprint(item.IDPaciente) + "/delete" }><button type="submit">Eliminar</button></form></td></tr>
+}
+</table>
+}
+
+templ Enfermeros(items []db.Enfermero) { @layout.Page("Enfermeros", enfermeroList(items)) }
+templ enfermeroList(items []db.Enfermero) {
+<a class="button" href="/web/enfermeros/nuevo">Nuevo enfermero</a>
+<table><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
+for _, item := range items {
+<tr><td>{ fmt.Sprint(item.IDEnfermero) }</td><td>{ item.Nombre }</td><td><form method="post" action={ "/web/enfermeros/" + fmt.Sprint(item.IDEnfermero) + "/delete" }><button type="submit">Eliminar</button></form></td></tr>
+}
+</table>
+}
+
+templ Familiares(items []db.Familiare) { @layout.Page("Familiares", familiarList(items)) }
+templ familiarList(items []db.Familiare) {
+<a class="button" href="/web/familiares/nuevo">Nuevo familiar</a>
+<table><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
+for _, item := range items {
+<tr><td>{ fmt.Sprint(item.IDFamiliar) }</td><td>{ item.Nombre }</td><td><form method="post" action={ "/web/familiares/" + fmt.Sprint(item.IDFamiliar) + "/delete" }><button type="submit">Eliminar</button></form></td></tr>
+}
+</table>
+}
+
+templ Avisos(items []db.Aviso) { @layout.Page("Avisos", avisoList(items)) }
+templ avisoList(items []db.Aviso) {
+<a class="button" href="/web/avisos/nuevo">Nuevo aviso</a>
+<table><tr><th>Nombre</th><th>Descripción</th><th>Inicio</th><th>Acciones</th></tr>
+for _, item := range items {
+<tr><td>{ item.Nombre }</td><td>{ item.Descripcion }</td><td>{ item.FechaHoraInicio.Format("02/01/2006 15:04") }</td><td><form method="post" action={ "/web/avisos/" + fmt.Sprint(item.IDAviso) + "/delete" }><button type="submit">Eliminar</button></form></td></tr>
+}
+</table>
+}

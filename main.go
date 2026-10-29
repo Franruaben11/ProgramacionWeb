@@ -6,8 +6,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"main.go/handlers"
+	"main.go/web"
 
 	// Driver de Postgres (el guion bajo es obligatorio para que funcione)
 	_ "github.com/lib/pq"
@@ -47,19 +49,33 @@ func main() {
 	familiarHandler := handlers.NewFamiliarHandler(repo)
 	pacienteHandler := handlers.NewPacienteHandler(repo)
 	avisoHandler := handlers.NewAvisoHandler(repo)
+	webHandler := web.NewHandler(repo)
 
-	// Configurar rutas usando los métodos de la misma instancia
-	http.HandleFunc("/enfermeros", enfermeroHandler.EnfermerosHandler)
-	http.HandleFunc("/enfermeros/", enfermeroHandler.EnfermeroHandler)
+	// Configurar rutas usando los métodos de la misma instancia. Las rutas
+	// sin /api se mantienen por compatibilidad con los clientes existentes.
+	mux := http.NewServeMux()
+	// HTML server-side rendered vive bajo /web y no interfiere con la API JSON.
+	mux.Handle("/web", webHandler)
+	mux.Handle("/web/", webHandler)
+	mux.HandleFunc("/enfermeros", enfermeroHandler.EnfermerosHandler)
+	mux.HandleFunc("/enfermeros/", enfermeroHandler.EnfermeroHandler)
+	mux.HandleFunc("/familiares", familiarHandler.FamiliaresHandler)
+	mux.HandleFunc("/familiares/", familiarHandler.FamiliarHandler)
+	mux.HandleFunc("/pacientes", pacienteHandler.PacientesHandler)
+	mux.HandleFunc("/pacientes/", pacienteHandler.PacienteHandler)
+	mux.HandleFunc("/avisos", avisoHandler.AvisosHandler)
+	mux.HandleFunc("/avisos/", avisoHandler.AvisoHandler)
 
-	http.HandleFunc("/familiares", familiarHandler.FamiliaresHandler)
-	http.HandleFunc("/familiares/", familiarHandler.FamiliarHandler)
-
-	http.HandleFunc("/pacientes", pacienteHandler.PacientesHandler)
-	http.HandleFunc("/pacientes/", pacienteHandler.PacienteHandler)
-
-	http.HandleFunc("/avisos", avisoHandler.AvisosHandler)
-	http.HandleFunc("/avisos/", avisoHandler.AvisoHandler)
+	// Las rutas bajo /api son las canónicas. StripPrefix conserva el formato
+	// de path que esperan los handlers actuales (/recurso[/id]).
+	mux.Handle("/api/enfermeros", http.StripPrefix("/api", http.HandlerFunc(enfermeroHandler.EnfermerosHandler)))
+	mux.Handle("/api/enfermeros/", http.StripPrefix("/api", http.HandlerFunc(enfermeroHandler.EnfermeroHandler)))
+	mux.Handle("/api/familiares", http.StripPrefix("/api", http.HandlerFunc(familiarHandler.FamiliaresHandler)))
+	mux.Handle("/api/familiares/", http.StripPrefix("/api", http.HandlerFunc(familiarHandler.FamiliarHandler)))
+	mux.Handle("/api/pacientes", http.StripPrefix("/api", http.HandlerFunc(pacienteHandler.PacientesHandler)))
+	mux.Handle("/api/pacientes/", http.StripPrefix("/api", http.HandlerFunc(pacienteHandler.PacienteHandler)))
+	mux.Handle("/api/avisos", http.StripPrefix("/api", http.HandlerFunc(avisoHandler.AvisosHandler)))
+	mux.Handle("/api/avisos/", http.StripPrefix("/api", http.HandlerFunc(avisoHandler.AvisoHandler)))
 
 	// Define el directorio que contiene los archivos estáticos.
 	staticDir := "./static"
@@ -67,8 +83,14 @@ func main() {
 	// Crea un manejador (handler) de servidor de archivos.
 	fileServer := http.FileServer(http.Dir(staticDir))
 
-	// Registra el manejador para que atienda todas las peticiones ("/").
-	http.Handle("/", fileServer)
+	// El servidor estático no debe responder por rutas de API desconocidas.
+	mux.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/api" || strings.HasPrefix(r.URL.Path, "/api/") {
+			http.NotFound(w, r)
+			return
+		}
+		fileServer.ServeHTTP(w, r)
+	}))
 
 	// Define el puerto y muestra un mensaje.
 	port := ":8080"
@@ -76,7 +98,7 @@ func main() {
 	fmt.Printf("Sirviendo archivos desde: %s\n", staticDir)
 
 	// Inicia el servidor.
-	err = http.ListenAndServe(port, nil)
+	err = http.ListenAndServe(port, mux)
 	if err != nil {
 		fmt.Printf("Error al iniciar el servidor: %s\n", err)
 	}
