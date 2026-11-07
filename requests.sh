@@ -135,7 +135,6 @@ request -X POST "$API_BASE_URL/avisos" \
     "nombre":"Desayuno y medicacion",
     "descripcion":"Te con galletitas",
     "fecha_hora_inicio":"2026-10-15T08:30:00Z",
-    "fecha_hora_fin":"2026-10-15T09:00:00Z",
     "id_paciente":'"$id_paciente"',
     "id_enfermero":'"$id_enfermero"'
   }'
@@ -172,15 +171,14 @@ check_body_contains "JSON"
 request -X POST "$API_BASE_URL/avisos" \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre":"Horario invalido",
-    "descripcion":"La hora de fin es anterior",
-    "fecha_hora_inicio":"2026-10-15T10:00:00Z",
-    "fecha_hora_fin":"2026-10-15T09:00:00Z",
+    "nombre":"Fecha invalida",
+    "descripcion":"La fecha de inicio no es valida",
+    "fecha_hora_inicio":"fecha-invalida",
     "id_paciente":'"$id_paciente"',
     "id_enfermero":'"$id_enfermero"'
   }'
 check_status 400
-check_body_contains "fecha_hora_fin"
+check_body_contains "Error al decodificar JSON"
 
 request -X PATCH "$API_BASE_URL/pacientes/$id_paciente"
 check_status 405

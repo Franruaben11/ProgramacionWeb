@@ -60,7 +60,7 @@ func homeContent() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<p>Gestioná la información de la residencia desde el servidor renderizado.</p><div class=\"cards\"><a href=\"/web/pacientes\">Pacientes</a><a href=\"/web/enfermeros\">Enfermeros</a><a href=\"/web/familiares\">Familiares</a><a href=\"/web/avisos\">Avisos</a></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<p>Gestioná la información de la residencia desde el servidor renderizado.</p><div class=\"cards\"><a href=\"/pacientes\">Pacientes</a><a href=\"/enfermeros\">Enfermeros</a><a href=\"/familiares\">Familiares</a><a href=\"/avisos\">Avisos</a></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

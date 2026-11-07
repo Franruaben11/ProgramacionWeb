@@ -53,18 +53,18 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) deleteResource(w http.ResponseWriter, r *http.Request) {
 	path := strings.TrimPrefix(r.URL.Path, "/web")
 	parts := strings.Split(strings.Trim(path, "/"), "/")
-	if len(parts) != 4 {
+	if len(parts) != 3 {
 		http.NotFound(w, r)
 		return
 	}
-	id, err := strconv.ParseInt(parts[2], 10, 32)
+	id, err := strconv.ParseInt(parts[1], 10, 32)
 	if err != nil || id <= 0 {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
 	}
 
 	var redirectPath string
-	switch parts[1] {
+	switch parts[0] {
 	case "pacientes":
 		err = h.repo.DeletePaciente(r.Context(), int32(id))
 		redirectPath = "/pacientes"
@@ -206,7 +206,7 @@ func (h *Handler) createPaciente(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	http.Redirect(w, r, "/web/pacientes", http.StatusSeeOther)
+	http.Redirect(w, r, "/pacientes", http.StatusSeeOther)
 }
 func (h *Handler) createEnfermero(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -222,7 +222,7 @@ func (h *Handler) createEnfermero(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	http.Redirect(w, r, "/web/enfermeros", http.StatusSeeOther)
+	http.Redirect(w, r, "/enfermeros", http.StatusSeeOther)
 }
 func (h *Handler) createFamiliar(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -238,7 +238,7 @@ func (h *Handler) createFamiliar(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	http.Redirect(w, r, "/web/familiares", http.StatusSeeOther)
+	http.Redirect(w, r, "/familiares", http.StatusSeeOther)
 }
 func (h *Handler) createAviso(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -269,5 +269,5 @@ func (h *Handler) createAviso(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	http.Redirect(w, r, "/web/avisos", http.StatusSeeOther)
+	http.Redirect(w, r, "/avisos", http.StatusSeeOther)
 }
