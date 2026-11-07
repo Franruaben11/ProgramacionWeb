@@ -112,10 +112,10 @@ make up
 
 La aplicación queda disponible en [http://localhost:8080](http://localhost:8080) y PostgreSQL en el puerto `5432`.
 
-La Fase 2 agrega vistas SSR con templ bajo `/web` (inicio, listados y
-formularios de pacientes, enfermeros, familiares y avisos). La API JSON se
-mantiene separada bajo `/api/...` y el frontend TP4 continúa disponible en
-`/static/index.html` (servido como `/`).
+La interfaz principal utiliza vistas SSR con templ en la raíz (`/`), incluyendo
+el inicio, los listados y los formularios de pacientes, enfermeros, familiares
+y avisos. La ruta `/web` se conserva como alias compatible. La API JSON y el
+frontend estático del TP4 se mantienen disponibles como compatibilidad.
 
 ## Arquitectura y rutas
 
@@ -124,11 +124,13 @@ mantiene separada bajo `/api/...` y el frontend TP4 continúa disponible en
   rutas con `fetch`.
 - **Compatibilidad:** las rutas antiguas sin `/api` continúan disponibles
   durante la transición.
-- **Interfaz SSR:** `/web`, `/web/pacientes`, `/web/enfermeros`,
-  `/web/familiares` y `/web/avisos`. Los formularios de alta se encuentran en
-  `/web/<entidad>/nuevo` y redirigen con `303 See Other` después de crear.
-- **Frontend TP4:** `/` sirve el panel estático que carga los registros en el
-  navegador y permite crear y eliminar datos sin recargar la página.
+- **Interfaz SSR principal:** `/`, `/pacientes`, `/enfermeros`, `/familiares` y
+  `/avisos`. Los formularios de alta se encuentran en
+  `/<entidad>/nuevo` y redirigen con `303 See Other` después de crear.
+- **Alias SSR:** `/web` y `/web/<entidad>` conservan el acceso a las mismas
+  vistas renderizadas en el servidor.
+- **Frontend TP4 de compatibilidad:** los archivos de `static/` se mantienen
+  disponibles para clientes anteriores; la raíz ya no sirve el panel estático.
 
 La API y las páginas SSR comparten la misma capa de datos generada por sqlc.
 Las vistas SSR se generan desde archivos `.templ` con:
@@ -162,7 +164,7 @@ El flujo de uso de la aplicación es el siguiente:
 3. Se registran los familiares vinculados a los pacientes.
 4. Un enfermero crea un aviso para registrar una actividad o situación
    relacionada con un paciente.
-5. El aviso incluye una descripción, un horario, el paciente involucrado y el
+5. El aviso incluye una descripción, la fecha y hora de registro, el paciente involucrado y el
    enfermero responsable.
 6. La información puede consultarse posteriormente para realizar el
    seguimiento diario del paciente.
@@ -176,5 +178,5 @@ El flujo de uso de la aplicación es el siguiente:
 - **Familiar:** persona vinculada a un paciente que necesita consultar
   información sobre sus actividades diarias.
 - **Aviso:** actividad o comunicación asociada a un paciente y registrada por un
-  enfermero. Incluye nombre, descripción, fecha y horario, paciente relacionado
+  enfermero. Incluye nombre, descripción, fecha y hora de registro, paciente relacionado
   y enfermero responsable.

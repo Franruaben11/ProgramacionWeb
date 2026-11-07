@@ -24,7 +24,6 @@ CREATE TABLE Avisos (
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT NOT NULL,
     fecha_hora_inicio TIMESTAMP NOT NULL,
-    fecha_hora_fin TIMESTAMP NOT NULL,
     id_paciente INT NOT NULL REFERENCES Pacientes(id_paciente) ON DELETE CASCADE,
     id_enfermero INT NOT NULL REFERENCES Enfermeros(id_enfermero) ON DELETE CASCADE
 );

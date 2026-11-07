@@ -51,20 +51,28 @@ func main() {
 	avisoHandler := handlers.NewAvisoHandler(repo)
 	webHandler := web.NewHandler(repo)
 
+	// Define el directorio que contiene los archivos estáticos de compatibilidad.
+	staticDir := "./static"
+	fileServer := http.FileServer(http.Dir(staticDir))
+
 	// Configurar rutas usando los métodos de la misma instancia. Las rutas
-	// sin /api se mantienen por compatibilidad con los clientes existentes.
+	// SSR usan la raíz; la API JSON se mantiene bajo /api.
 	mux := http.NewServeMux()
-	// HTML server-side rendered vive bajo /web y no interfiere con la API JSON.
+	// HTML server-side rendered vive en la raíz; /web se conserva como alias.
+	mux.Handle("/static/", http.StripPrefix("/static/", fileServer))
+	mux.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" || strings.HasPrefix(r.URL.Path, "/pacientes") ||
+			strings.HasPrefix(r.URL.Path, "/enfermeros") ||
+			strings.HasPrefix(r.URL.Path, "/familiares") ||
+			strings.HasPrefix(r.URL.Path, "/avisos") ||
+			strings.HasPrefix(r.URL.Path, "/web") {
+			webHandler.ServeHTTP(w, r)
+			return
+		}
+		fileServer.ServeHTTP(w, r)
+	}))
 	mux.Handle("/web", webHandler)
 	mux.Handle("/web/", webHandler)
-	mux.HandleFunc("/enfermeros", enfermeroHandler.EnfermerosHandler)
-	mux.HandleFunc("/enfermeros/", enfermeroHandler.EnfermeroHandler)
-	mux.HandleFunc("/familiares", familiarHandler.FamiliaresHandler)
-	mux.HandleFunc("/familiares/", familiarHandler.FamiliarHandler)
-	mux.HandleFunc("/pacientes", pacienteHandler.PacientesHandler)
-	mux.HandleFunc("/pacientes/", pacienteHandler.PacienteHandler)
-	mux.HandleFunc("/avisos", avisoHandler.AvisosHandler)
-	mux.HandleFunc("/avisos/", avisoHandler.AvisoHandler)
 
 	// Las rutas bajo /api son las canónicas. StripPrefix conserva el formato
 	// de path que esperan los handlers actuales (/recurso[/id]).
@@ -77,24 +85,9 @@ func main() {
 	mux.Handle("/api/avisos", http.StripPrefix("/api", http.HandlerFunc(avisoHandler.AvisosHandler)))
 	mux.Handle("/api/avisos/", http.StripPrefix("/api", http.HandlerFunc(avisoHandler.AvisoHandler)))
 
-	// Define el directorio que contiene los archivos estáticos.
-	staticDir := "./static"
-
-	// Crea un manejador (handler) de servidor de archivos.
-	fileServer := http.FileServer(http.Dir(staticDir))
-
-	// El servidor estático no debe responder por rutas de API desconocidas.
-	mux.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/api" || strings.HasPrefix(r.URL.Path, "/api/") {
-			http.NotFound(w, r)
-			return
-		}
-		fileServer.ServeHTTP(w, r)
-	}))
-
 	// Define el puerto y muestra un mensaje.
 	port := ":8080"
-	fmt.Printf("Servidor ESTÁTICO escuchando en http://localhost%s\n", port)
+	fmt.Printf("Servidor SSR escuchando en http://localhost%s\n", port)
 	fmt.Printf("Sirviendo archivos desde: %s\n", staticDir)
 
 	// Inicia el servidor.

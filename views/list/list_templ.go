@@ -64,7 +64,7 @@ func pacienteList(items []db.Paciente) templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<a class=\"button\" href=\"/web/pacientes/nuevo\">Nuevo paciente</a><table><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<a class=\"button\" href=\"/pacientes/nuevo\">Nuevo paciente</a><table><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -100,9 +100,9 @@ func pacienteList(items []db.Paciente) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 templ.SafeURL
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs("/web/pacientes/" + fmt.Sprint(item.IDPaciente) + "/delete")
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs("/pacientes/" + fmt.Sprint(item.IDPaciente) + "/delete")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 14, Col: 160}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 14, Col: 156}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -171,7 +171,7 @@ func enfermeroList(items []db.Enfermero) templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<a class=\"button\" href=\"/web/enfermeros/nuevo\">Nuevo enfermero</a><table><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<a class=\"button\" href=\"/enfermeros/nuevo\">Nuevo enfermero</a><table><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -207,9 +207,9 @@ func enfermeroList(items []db.Enfermero) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var10 templ.SafeURL
-			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs("/web/enfermeros/" + fmt.Sprint(item.IDEnfermero) + "/delete")
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs("/enfermeros/" + fmt.Sprint(item.IDEnfermero) + "/delete")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 24, Col: 163}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 24, Col: 159}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -278,7 +278,7 @@ func familiarList(items []db.Familiare) templ.Component {
 			templ_7745c5c3_Var12 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<a class=\"button\" href=\"/web/familiares/nuevo\">Nuevo familiar</a><table><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<a class=\"button\" href=\"/familiares/nuevo\">Nuevo familiar</a><table><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -314,9 +314,9 @@ func familiarList(items []db.Familiare) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var15 templ.SafeURL
-			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinURLErrs("/web/familiares/" + fmt.Sprint(item.IDFamiliar) + "/delete")
+			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinURLErrs("/familiares/" + fmt.Sprint(item.IDFamiliar) + "/delete")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 34, Col: 161}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 34, Col: 157}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -385,7 +385,7 @@ func avisoList(items []db.Aviso) templ.Component {
 			templ_7745c5c3_Var17 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<a class=\"button\" href=\"/web/avisos/nuevo\">Nuevo aviso</a><table><tr><th>Nombre</th><th>Descripción</th><th>Inicio</th><th>Acciones</th></tr>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<a class=\"button\" href=\"/avisos/nuevo\">Nuevo aviso</a><table><tr><th>Nombre</th><th>Descripción</th><th>Inicio</th><th>Acciones</th></tr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -434,9 +434,9 @@ func avisoList(items []db.Aviso) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var21 templ.SafeURL
-			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinURLErrs("/web/avisos/" + fmt.Sprint(item.IDAviso) + "/delete")
+			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinURLErrs("/avisos/" + fmt.Sprint(item.IDAviso) + "/delete")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 44, Col: 203}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 44, Col: 199}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 			if templ_7745c5c3_Err != nil {

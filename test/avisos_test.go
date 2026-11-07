@@ -27,16 +27,14 @@ func TestAvisoCRUD(t *testing.T) {
 		t.Fatalf("Error al crear paciente para aviso: %v", err)
 	}
 
-	// Tiempos para la actividad
+	// Tiempo de registro de la actividad
 	inicio := time.Now().Truncate(time.Second)
-	fin := inicio.Add(30 * time.Minute)
 
-	// 3. Crear aviso con los nuevos campos (todos NOT NULL, sin sql.Null*)
+	// 3. Crear aviso
 	aviso, err := q.CreateAviso(ctx, dbsqlc.CreateAvisoParams{
 		Nombre:          "Control de presion",
 		Descripcion:     "Tomar presion a las 10am",
 		FechaHoraInicio: inicio,
-		FechaHoraFin:    fin,
 		IDPaciente:      pac.IDPaciente,
 		IDEnfermero:     enf.IDEnfermero,
 	})
@@ -54,7 +52,6 @@ func TestAvisoCRUD(t *testing.T) {
 		avisoGet.IDEnfermero != enf.IDEnfermero {
 		t.Fatalf("Los datos del aviso obtenido no coinciden: %+v", avisoGet)
 	}
-
 
 	// 5. Listar avisos
 	avisos, err := q.ListAvisos(ctx)

@@ -17,13 +17,16 @@ export const idOf = (record, type) => record[idKeys[type] || `id_${type}`] ?? re
 export const nameOf = (record) => record.nombre || `Registro #${record.id}`;
 export const formData = (form) => Object.fromEntries(new FormData(form).entries());
 
-export const renderRecords = (list, records, type, label = nameOf) => {
+export const renderRecords = (list, records, type, details = (record) => [["Nombre", nameOf(record)]]) => {
   list.replaceChildren();
   records.forEach((record) => {
     const id = idOf(record, type);
     const item = document.createElement("li");
-    item.innerHTML = `<span><strong>#${escapeHtml(id)}</strong> ${escapeHtml(label(record))}</span>
-      <button class="delete-button" type="button" data-delete="${escapeHtml(id)}" aria-label="Eliminar ${escapeHtml(label(record))}">Eliminar</button>`;
+    const fields = details(record)
+      .map(([label, value]) => `<div class="record-field"><strong>${escapeHtml(label)}</strong><span>${escapeHtml(value)}</span></div>`)
+      .join("");
+    item.innerHTML = `<div class="record-content"><span class="record-id">#${escapeHtml(id)}</span><div class="record-details">${fields}</div></div>
+      <button class="delete-button" type="button" data-delete="${escapeHtml(id)}" aria-label="Eliminar registro #${escapeHtml(id)}">Eliminar</button>`;
     list.append(item);
   });
 };

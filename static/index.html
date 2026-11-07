@@ -66,12 +66,13 @@
         <section class="panel-card panel-card-wide" id="avisos-panel">
           <div class="panel-heading"><h3>Avisos</h3><span class="badge" id="avisos-count">0</span></div>
           <form class="notice-form" data-form="avisos">
-            <label for="aviso-nombre">Título</label><input id="aviso-nombre" name="nombre" required>
-            <label for="aviso-descripcion">Descripción</label><textarea id="aviso-descripcion" name="descripcion" rows="2" required></textarea>
-            <label for="aviso-inicio">Inicio</label><input id="aviso-inicio" name="fecha_hora_inicio" type="datetime-local" required>
-            <label for="aviso-fin">Fin</label><input id="aviso-fin" name="fecha_hora_fin" type="datetime-local" required>
-            <label for="aviso-paciente">Paciente</label><select id="aviso-paciente" name="id_paciente" required><option value="">Seleccioná un paciente</option></select>
-            <label for="aviso-enfermero">Enfermero</label><select id="aviso-enfermero" name="id_enfermero" required><option value="">Seleccioná un enfermero</option></select>
+            <div class="notice-row"><div class="notice-field"><label for="aviso-nombre">Título</label><input id="aviso-nombre" name="nombre" required></div></div>
+            <div class="notice-row"><div class="notice-field"><label for="aviso-descripcion">Descripción</label><textarea id="aviso-descripcion" name="descripcion" rows="2" required></textarea></div></div>
+            <div class="notice-row"><div class="notice-field"><label for="aviso-inicio">Inicio</label><input id="aviso-inicio" name="fecha_hora_inicio" type="datetime-local" required></div></div>
+            <div class="notice-row notice-row-related">
+              <div class="notice-field"><label for="aviso-paciente">Paciente</label><select id="aviso-paciente" name="id_paciente" required><option value="">Seleccioná un paciente</option></select></div>
+              <div class="notice-field"><label for="aviso-enfermero">Enfermero</label><select id="aviso-enfermero" name="id_enfermero" required><option value="">Seleccioná un enfermero</option></select></div>
+            </div>
             <button class="button button-primary" type="submit">Publicar aviso</button>
           </form>
           <ul class="record-list" id="avisos-list"></ul>

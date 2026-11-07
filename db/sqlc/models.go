@@ -13,7 +13,6 @@ type Aviso struct {
 	Nombre          string    `json:"nombre"`
 	Descripcion     string    `json:"descripcion"`
 	FechaHoraInicio time.Time `json:"fecha_hora_inicio"`
-	FechaHoraFin    time.Time `json:"fecha_hora_fin"`
 	IDPaciente      int32     `json:"id_paciente"`
 	IDEnfermero     int32     `json:"id_enfermero"`
 }

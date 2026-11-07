@@ -22,24 +22,28 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.deleteResource(w, r)
 		return
 	}
-	switch r.URL.Path {
-	case "/web", "/web/":
+	path := strings.TrimPrefix(r.URL.Path, "/web")
+	if path == "" {
+		path = "/"
+	}
+	switch path {
+	case "/":
 		h.render(w, r, home.Home())
-	case "/web/pacientes":
+	case "/pacientes":
 		h.pacientes(w, r)
-	case "/web/pacientes/nuevo":
+	case "/pacientes/nuevo":
 		h.formOrRedirect(w, r, forms.Paciente(), h.createPaciente)
-	case "/web/enfermeros":
+	case "/enfermeros":
 		h.enfermeros(w, r)
-	case "/web/enfermeros/nuevo":
+	case "/enfermeros/nuevo":
 		h.formOrRedirect(w, r, forms.Enfermero(), h.createEnfermero)
-	case "/web/familiares":
+	case "/familiares":
 		h.familiares(w, r)
-	case "/web/familiares/nuevo":
+	case "/familiares/nuevo":
 		h.formOrRedirect(w, r, forms.Familiar(), h.createFamiliar)
-	case "/web/avisos":
+	case "/avisos":
 		h.avisos(w, r)
-	case "/web/avisos/nuevo":
+	case "/avisos/nuevo":
 		h.avisoFormOrRedirect(w, r)
 	default:
 		http.NotFound(w, r)
@@ -47,7 +51,8 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) deleteResource(w http.ResponseWriter, r *http.Request) {
-	parts := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
+	path := strings.TrimPrefix(r.URL.Path, "/web")
+	parts := strings.Split(strings.Trim(path, "/"), "/")
 	if len(parts) != 4 {
 		http.NotFound(w, r)
 		return
@@ -62,16 +67,16 @@ func (h *Handler) deleteResource(w http.ResponseWriter, r *http.Request) {
 	switch parts[1] {
 	case "pacientes":
 		err = h.repo.DeletePaciente(r.Context(), int32(id))
-		redirectPath = "/web/pacientes"
+		redirectPath = "/pacientes"
 	case "enfermeros":
 		err = h.repo.DeleteEnfermero(r.Context(), int32(id))
-		redirectPath = "/web/enfermeros"
+		redirectPath = "/enfermeros"
 	case "familiares":
 		err = h.repo.DeleteFamiliar(r.Context(), int32(id))
-		redirectPath = "/web/familiares"
+		redirectPath = "/familiares"
 	case "avisos":
 		err = h.repo.DeleteAviso(r.Context(), int32(id))
-		redirectPath = "/web/avisos"
+		redirectPath = "/avisos"
 	default:
 		http.NotFound(w, r)
 		return
@@ -249,11 +254,6 @@ func (h *Handler) createAviso(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "fecha de inicio inválida", 400)
 		return
 	}
-	fin, err := time.Parse("2006-01-02T15:04", r.FormValue("fecha_hora_fin"))
-	if err != nil {
-		http.Error(w, "fecha de fin inválida", 400)
-		return
-	}
 	paciente, err := strconv.ParseInt(r.FormValue("id_paciente"), 10, 32)
 	if err != nil {
 		http.Error(w, "paciente inválido", 400)
@@ -264,7 +264,7 @@ func (h *Handler) createAviso(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "enfermero inválido", 400)
 		return
 	}
-	_, err = h.repo.CreateAviso(r.Context(), db.CreateAvisoParams{Nombre: r.FormValue("nombre"), Descripcion: r.FormValue("descripcion"), FechaHoraInicio: inicio, FechaHoraFin: fin, IDPaciente: int32(paciente), IDEnfermero: int32(enfermero)})
+	_, err = h.repo.CreateAviso(r.Context(), db.CreateAvisoParams{Nombre: r.FormValue("nombre"), Descripcion: r.FormValue("descripcion"), FechaHoraInicio: inicio, IDPaciente: int32(paciente), IDEnfermero: int32(enfermero)})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return

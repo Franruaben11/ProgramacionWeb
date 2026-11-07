@@ -64,7 +64,7 @@ func pacienteForm() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form method=\"post\" action=\"/web/pacientes\"><label>Nombre<input name=\"nombre\" required></label><button type=\"submit\">Guardar</button></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form method=\"post\" action=\"/pacientes\"><label>Nombre<input name=\"nombre\" required></label><button type=\"submit\">Guardar</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -122,7 +122,7 @@ func enfermeroForm() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<form method=\"post\" action=\"/web/enfermeros\"><label>Nombre<input name=\"nombre\" required></label><label>Contraseña<input type=\"password\" name=\"contrasena\" required></label><button type=\"submit\">Guardar</button></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<form method=\"post\" action=\"/enfermeros\"><label>Nombre<input name=\"nombre\" required></label><label>Contraseña<input type=\"password\" name=\"contrasena\" required></label><button type=\"submit\">Guardar</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -180,7 +180,7 @@ func familiarForm() templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<form method=\"post\" action=\"/web/familiares\"><label>Nombre<input name=\"nombre\" required></label><label>Contraseña<input type=\"password\" name=\"contrasena\" required></label><button type=\"submit\">Guardar</button></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<form method=\"post\" action=\"/familiares\"><label>Nombre<input name=\"nombre\" required></label><label>Contraseña<input type=\"password\" name=\"contrasena\" required></label><button type=\"submit\">Guardar</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -238,7 +238,7 @@ func avisoForm(pacientes []db.Paciente, enfermeros []db.Enfermero) templ.Compone
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<form method=\"post\" action=\"/web/avisos\"><label>Nombre<input name=\"nombre\" required></label> <label>Descripción<textarea name=\"descripcion\" required></textarea></label> <label>Inicio<input type=\"datetime-local\" name=\"fecha_hora_inicio\" required></label> <label>Fin<input type=\"datetime-local\" name=\"fecha_hora_fin\" required></label> <label>Paciente <select name=\"id_paciente\" required><option value=\"\">Seleccionar paciente</option> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<form class=\"notice-form\" method=\"post\" action=\"/avisos\"><div class=\"notice-row\"><div class=\"notice-field\"><label for=\"web-aviso-nombre\">Nombre</label><input id=\"web-aviso-nombre\" name=\"nombre\" required></div></div><div class=\"notice-row\"><div class=\"notice-field\"><label for=\"web-aviso-descripcion\">Descripción</label><textarea id=\"web-aviso-descripcion\" name=\"descripcion\" required></textarea></div></div><div class=\"notice-row\"><div class=\"notice-field\"><label for=\"web-aviso-inicio\">Inicio</label><input id=\"web-aviso-inicio\" type=\"datetime-local\" name=\"fecha_hora_inicio\" required></div></div><div class=\"notice-row notice-row-related\"><div class=\"notice-field\"><label for=\"web-aviso-paciente\">Paciente</label> <select id=\"web-aviso-paciente\" name=\"id_paciente\" required><option value=\"\">Seleccionar paciente</option> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -250,7 +250,7 @@ func avisoForm(pacientes []db.Paciente, enfermeros []db.Enfermero) templ.Compone
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(paciente.IDPaciente))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/forms/forms.templ`, Line: 31, Col: 52}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/forms/forms.templ`, Line: 31, Col: 53}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -263,7 +263,7 @@ func avisoForm(pacientes []db.Paciente, enfermeros []db.Enfermero) templ.Compone
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(paciente.Nombre)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/forms/forms.templ`, Line: 31, Col: 72}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/forms/forms.templ`, Line: 31, Col: 73}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -274,7 +274,7 @@ func avisoForm(pacientes []db.Paciente, enfermeros []db.Enfermero) templ.Compone
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</select></label> <label>Enfermero <select name=\"id_enfermero\" required><option value=\"\">Seleccionar enfermero</option> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</select></div><div class=\"notice-field\"><label for=\"web-aviso-enfermero\">Enfermero</label> <select id=\"web-aviso-enfermero\" name=\"id_enfermero\" required><option value=\"\">Seleccionar enfermero</option> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -286,7 +286,7 @@ func avisoForm(pacientes []db.Paciente, enfermeros []db.Enfermero) templ.Compone
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(enfermero.IDEnfermero))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/forms/forms.templ`, Line: 39, Col: 54}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/forms/forms.templ`, Line: 39, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -299,7 +299,7 @@ func avisoForm(pacientes []db.Paciente, enfermeros []db.Enfermero) templ.Compone
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(enfermero.Nombre)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/forms/forms.templ`, Line: 39, Col: 75}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/forms/forms.templ`, Line: 39, Col: 76}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
@@ -310,7 +310,7 @@ func avisoForm(pacientes []db.Paciente, enfermeros []db.Enfermero) templ.Compone
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</select></label> <button type=\"submit\">Guardar</button></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</select></div></div><button type=\"submit\">Guardar</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

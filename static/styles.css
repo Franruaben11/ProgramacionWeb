@@ -256,20 +256,43 @@ h2 {
 }
 
 .notice-form {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.notice-form label {
+.notice-row {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.notice-row-related {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.notice-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.notice-field label {
   color: var(--muted);
   font-size: 0.8rem;
   font-weight: 600;
 }
 
-.notice-form textarea,
 .notice-form button {
-  grid-column: span 3;
+  width: 100%;
+}
+
+.notice-form textarea {
+  width: 100%;
+  min-height: 5rem;
+  resize: vertical;
 }
 
 input,
@@ -324,8 +347,39 @@ select {
   font-size: 0.87rem;
 }
 
-.record-list li strong {
+.record-content {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.record-id {
+  flex-shrink: 0;
   color: var(--accent);
+  font-weight: 700;
+}
+
+.record-details {
+  display: grid;
+  min-width: 0;
+  gap: 0.2rem 0.75rem;
+}
+
+.record-field {
+  display: grid;
+  grid-template-columns: minmax(5.5rem, auto) minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+.record-field strong {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.record-field span {
+  overflow-wrap: anywhere;
 }
 
 .delete-button {
@@ -485,8 +539,12 @@ select {
     grid-column: auto;
   }
 
-  .notice-form {
-    display: flex;
+  .notice-row-related {
+    grid-template-columns: 1fr;
+  }
+
+  .notice-form button {
+    width: 100%;
   }
 
   .information > p {

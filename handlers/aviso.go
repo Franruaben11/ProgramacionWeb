@@ -16,7 +16,6 @@ type Aviso struct {
 	Nombre          string    `json:"nombre"`
 	Descripcion     string    `json:"descripcion"`
 	FechaHoraInicio time.Time `json:"fecha_hora_inicio"`
-	FechaHoraFin    time.Time `json:"fecha_hora_fin"`
 	IDPaciente      int32     `json:"id_paciente"`
 	IDEnfermero     int32     `json:"id_enfermero"`
 }
@@ -43,7 +42,7 @@ func (h *AvisoHandler) AvisosHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// AvisoHandler maneja /avisos/{id} 
+// AvisoHandler maneja /avisos/{id}
 func (h *AvisoHandler) AvisoHandler(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(r.URL.Path, "/")
 	if len(parts) != 3 || parts[2] == "" {
@@ -71,7 +70,7 @@ func (h *AvisoHandler) AvisoHandler(w http.ResponseWriter, r *http.Request) {
 func (h *AvisoHandler) createAviso(w http.ResponseWriter, r *http.Request) {
 	var newAviso Aviso
 
-	err := json.NewDecoder(r.Body).Decode(&newAviso);
+	err := json.NewDecoder(r.Body).Decode(&newAviso)
 
 	if err != nil {
 		http.Error(w, "Error al decodificar JSON: "+err.Error(), http.StatusBadRequest)
@@ -91,14 +90,6 @@ func (h *AvisoHandler) createAviso(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "El campo 'fecha_hora_inicio' es obligatorio", http.StatusBadRequest)
 		return
 	}
-	if newAviso.FechaHoraFin.IsZero() {
-		http.Error(w, "El campo 'fecha_hora_fin' es obligatorio", http.StatusBadRequest)
-		return
-	}
-	if newAviso.FechaHoraFin.Before(newAviso.FechaHoraInicio) {
-		http.Error(w, "La 'fecha_hora_fin' no puede ser anterior a 'fecha_hora_inicio'", http.StatusBadRequest)
-		return
-	}
 	if newAviso.IDPaciente <= 0 {
 		http.Error(w, "El campo 'id_paciente' es obligatorio", http.StatusBadRequest)
 		return
@@ -112,7 +103,6 @@ func (h *AvisoHandler) createAviso(w http.ResponseWriter, r *http.Request) {
 		Nombre:          newAviso.Nombre,
 		Descripcion:     newAviso.Descripcion,
 		FechaHoraInicio: newAviso.FechaHoraInicio,
-		FechaHoraFin:    newAviso.FechaHoraFin,
 		IDPaciente:      newAviso.IDPaciente,
 		IDEnfermero:     newAviso.IDEnfermero,
 	})
@@ -128,7 +118,7 @@ func (h *AvisoHandler) createAviso(w http.ResponseWriter, r *http.Request) {
 
 // GET /avisos - Listar todos los avisos
 func (h *AvisoHandler) getAllAvisos(w http.ResponseWriter, r *http.Request) {
-	
+
 	avisos, err := h.repo.ListAvisos(r.Context())
 
 	if err != nil {
@@ -143,9 +133,9 @@ func (h *AvisoHandler) getAllAvisos(w http.ResponseWriter, r *http.Request) {
 
 // GET /avisos/{id} - Obtener un aviso específico por ID
 func (h *AvisoHandler) getAviso(w http.ResponseWriter, r *http.Request, id int) {
-	
+
 	aviso, err := h.repo.GetAviso(r.Context(), int32(id))
-	
+
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			http.Error(w, "Aviso no encontrado", http.StatusNotFound)

@@ -5,13 +5,23 @@ const state = { pacientes: [], enfermeros: [], familiares: [], avisos: [] };
 const status = document.querySelector("#status");
 const list = (type) => document.querySelector(`#${type}-list`);
 
-const noticeLabel = (aviso) => {
+const noticeDetails = (aviso) => {
   const patient = state.pacientes.find((item) => idOf(item, "paciente") === aviso.id_paciente);
-  return `${aviso.nombre} · ${patient ? nameOf(patient) : `Paciente #${aviso.id_paciente}`}`;
+  const nurse = state.enfermeros.find((item) => idOf(item, "enfermero") === aviso.id_enfermero);
+  return [
+    ["Título", aviso.nombre],
+    ["Descripción", aviso.descripcion],
+    ["Inicio", new Date(aviso.fecha_hora_inicio).toLocaleString("es-AR")],
+    ["Paciente", patient ? nameOf(patient) : `Paciente #${aviso.id_paciente}`],
+    ["Enfermero", nurse ? nameOf(nurse) : `Enfermero #${aviso.id_enfermero}`],
+  ];
 };
 
 const render = (type) => {
-  renderRecords(list(type), state[type], type, type === "avisos" ? noticeLabel : nameOf);
+  const details = type === "avisos"
+    ? noticeDetails
+    : (record) => [["Nombre", nameOf(record)]];
+  renderRecords(list(type), state[type], type, details);
   updateCount(type, state[type].length);
 };
 
@@ -35,7 +45,6 @@ const submit = async (event) => {
     data.id_paciente = Number(data.id_paciente);
     data.id_enfermero = Number(data.id_enfermero);
     data.fecha_hora_inicio = new Date(data.fecha_hora_inicio).toISOString();
-    data.fecha_hora_fin = new Date(data.fecha_hora_fin).toISOString();
   }
   try {
     await api[type].create(data);
