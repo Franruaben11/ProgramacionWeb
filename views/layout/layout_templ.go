@@ -36,26 +36,13 @@ func Page(title string, content templ.Component) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/layout.templ`, Line: 6, Col: 112}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/layout.templ`, Line: 9, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " · La Casa del Ángel</title><link rel=\"stylesheet\" href=\"/styles.css\"></head><body><header><a href=\"/\">La Casa del Ángel</a><nav><a href=\"/pacientes\">Pacientes</a><a href=\"/enfermeros\">Enfermeros</a><a href=\"/familiares\">Familiares</a><a href=\"/avisos\">Avisos</a></nav></header><main><h1>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(title)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/layout.templ`, Line: 7, Col: 219}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</h1>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " · La Casa del Ángel</title><link rel=\"stylesheet\" href=\"/styles.css\"></head><body><header class=\"site-header\"><div class=\"container header-content\"><a class=\"brand\" href=\"/\"><span class=\"brand-mark\" aria-hidden=\"true\">LC</span> <span><strong>La Casa del Ángel</strong> <small>Gestión geriátrica</small></span></a><nav aria-label=\"Navegación principal\"><a href=\"/\">Inicio</a> <a href=\"/pacientes\">Pacientes</a> <a href=\"/enfermeros\">Enfermeros</a> <a href=\"/familiares\">Familiares</a> <a href=\"/avisos\">Avisos</a></nav></div></header><main class=\"container section\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -63,7 +50,7 @@ func Page(title string, content templ.Component) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</main></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</main><footer class=\"site-footer\"><div class=\"container footer-content\"><span>La Casa del Ángel · Residencia Geriátrica</span></div></footer></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

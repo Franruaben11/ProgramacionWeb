@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql" // Paquete nativo para usar bases de datos
+	"time"
 	"fmt"
 	"log"
 	"net/http"
@@ -34,8 +35,15 @@ func main() {
 	}
 	defer dbConn.Close()
 
-	// Verificar que la conexión a la base de datos funciona
-	err = dbConn.Ping()
+	// Esperar a que la base de datos esté lista (hasta 5 intentos)
+	for i := 1; i <= 5; i++ {
+		err = dbConn.Ping()
+		if err == nil {
+			break
+		}
+		fmt.Printf("Esperando a la base de datos (intento %d/5)...\n", i)
+		time.Sleep(1 * time.Second)
+	}
 	if err != nil {
 		log.Fatal("No se pudo conectar a la base de datos.", err)
 	}

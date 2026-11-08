@@ -1,9 +1,41 @@
 package layout
 
 templ Page(title string, content templ.Component) {
-<!doctype html>
-<html lang="es">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>{ title } · La Casa del Ángel</title><link rel="stylesheet" href="/styles.css"/></head>
-<body><header><a href="/">La Casa del Ángel</a><nav><a href="/pacientes">Pacientes</a><a href="/enfermeros">Enfermeros</a><a href="/familiares">Familiares</a><a href="/avisos">Avisos</a></nav></header><main><h1>{ title }</h1>@content</main></body>
-</html>
+	<!DOCTYPE html>
+	<html lang="es">
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<title>{ title } · La Casa del Ángel</title>
+			<link rel="stylesheet" href="/styles.css"/>
+		</head>
+		<body>
+			<header class="site-header">
+				<div class="container header-content">
+					<a class="brand" href="/">
+						<span class="brand-mark" aria-hidden="true">LC</span>
+						<span>
+							<strong>La Casa del Ángel</strong>
+							<small>Gestión geriátrica</small>
+						</span>
+					</a>
+					<nav aria-label="Navegación principal">
+						<a href="/">Inicio</a>
+						<a href="/pacientes">Pacientes</a>
+						<a href="/enfermeros">Enfermeros</a>
+						<a href="/familiares">Familiares</a>
+						<a href="/avisos">Avisos</a>
+					</nav>
+				</div>
+			</header>
+			<main class="container section">
+				@content
+			</main>
+			<footer class="site-footer">
+				<div class="container footer-content">
+					<span>La Casa del Ángel · Residencia Geriátrica</span>
+				</div>
+			</footer>
+		</body>
+	</html>
 }

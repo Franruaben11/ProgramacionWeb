@@ -2,45 +2,136 @@ package forms
 
 import (
 	"fmt"
-	"main.go/views/layout"
 	db "main.go/db/sqlc"
+	"main.go/views/layout"
 )
 
-templ Paciente() { @layout.Page("Nuevo paciente", pacienteForm()) }
-templ pacienteForm() { <form method="post" action="/pacientes"><label>Nombre<input name="nombre" required/></label><button type="submit">Guardar</button></form> }
+templ Paciente() {
+	@layout.Page("Nuevo paciente", pacienteForm())
+}
 
-templ Enfermero() { @layout.Page("Nuevo enfermero", enfermeroForm()) }
-templ enfermeroForm() { <form method="post" action="/enfermeros"><label>Nombre<input name="nombre" required/></label><label>Contraseña<input type="password" name="contrasena" required/></label><button type="submit">Guardar</button></form> }
+templ pacienteForm() {
+	<div class="panel-card" style="max-width: 560px; margin: 0 auto;">
+		<div class="panel-heading">
+			<h2>Registrar nuevo paciente</h2>
+		</div>
+		<form class="stack-form" method="post" action="/pacientes">
+			<div class="notice-field">
+				<label for="paciente-nombre">Nombre y apellido</label>
+				<input id="paciente-nombre" name="nombre" placeholder="Ej: Juan Pérez" required/>
+			</div>
+			<div style="display: flex; gap: 1rem; margin-top: 1rem;">
+				<button class="button button-primary" type="submit">Guardar paciente</button>
+				<a class="button" href="/pacientes" style="border: 1px solid var(--line);">Cancelar</a>
+			</div>
+		</form>
+	</div>
+}
 
-templ Familiar() { @layout.Page("Nuevo familiar", familiarForm()) }
-templ familiarForm() { <form method="post" action="/familiares"><label>Nombre<input name="nombre" required/></label><label>Contraseña<input type="password" name="contrasena" required/></label><button type="submit">Guardar</button></form> }
+templ Enfermero() {
+	@layout.Page("Nuevo enfermero", enfermeroForm())
+}
+
+templ enfermeroForm() {
+	<div class="panel-card" style="max-width: 560px; margin: 0 auto;">
+		<div class="panel-heading">
+			<h2>Registrar nuevo enfermero</h2>
+		</div>
+		<form class="stack-form" method="post" action="/enfermeros">
+			<div class="notice-field">
+				<label for="enfermero-nombre">Nombre y apellido</label>
+				<input id="enfermero-nombre" name="nombre" placeholder="Ej: Carlos Gómez" required/>
+			</div>
+			<div class="notice-field">
+				<label for="enfermero-clave">Contraseña</label>
+				<input id="enfermero-clave" type="password" name="contrasena" required/>
+			</div>
+			<div style="display: flex; gap: 1rem; margin-top: 1rem;">
+				<button class="button button-primary" type="submit">Guardar enfermero</button>
+				<a class="button" href="/enfermeros" style="border: 1px solid var(--line);">Cancelar</a>
+			</div>
+		</form>
+	</div>
+}
+
+templ Familiar() {
+	@layout.Page("Nuevo familiar", familiarForm())
+}
+
+templ familiarForm() {
+	<div class="panel-card" style="max-width: 560px; margin: 0 auto;">
+		<div class="panel-heading">
+			<h2>Registrar nuevo familiar</h2>
+		</div>
+		<form class="stack-form" method="post" action="/familiares">
+			<div class="notice-field">
+				<label for="familiar-nombre">Nombre y apellido</label>
+				<input id="familiar-nombre" name="nombre" placeholder="Ej: María Gómez" required/>
+			</div>
+			<div class="notice-field">
+				<label for="familiar-clave">Contraseña</label>
+				<input id="familiar-clave" type="password" name="contrasena" required/>
+			</div>
+			<div style="display: flex; gap: 1rem; margin-top: 1rem;">
+				<button class="button button-primary" type="submit">Guardar familiar</button>
+				<a class="button" href="/familiares" style="border: 1px solid var(--line);">Cancelar</a>
+			</div>
+		</form>
+	</div>
+}
 
 templ Aviso(pacientes []db.Paciente, enfermeros []db.Enfermero) {
 	@layout.Page("Nuevo aviso", avisoForm(pacientes, enfermeros))
 }
+
 templ avisoForm(pacientes []db.Paciente, enfermeros []db.Enfermero) {
-	<form class="notice-form" method="post" action="/avisos">
-		<div class="notice-row"><div class="notice-field"><label for="web-aviso-nombre">Nombre</label><input id="web-aviso-nombre" name="nombre" required/></div></div>
-		<div class="notice-row"><div class="notice-field"><label for="web-aviso-descripcion">Descripción</label><textarea id="web-aviso-descripcion" name="descripcion" required></textarea></div></div>
-		<div class="notice-row"><div class="notice-field"><label for="web-aviso-inicio">Inicio</label><input id="web-aviso-inicio" type="datetime-local" name="fecha_hora_inicio" required/></div></div>
-		<div class="notice-row notice-row-related">
-			<div class="notice-field"><label for="web-aviso-paciente">Paciente</label>
-				<select id="web-aviso-paciente" name="id_paciente" required>
-					<option value="">Seleccionar paciente</option>
-					for _, paciente := range pacientes {
-						<option value={ fmt.Sprint(paciente.IDPaciente) }>{ paciente.Nombre }</option>
-					}
-				</select>
-			</div>
-			<div class="notice-field"><label for="web-aviso-enfermero">Enfermero</label>
-				<select id="web-aviso-enfermero" name="id_enfermero" required>
-					<option value="">Seleccionar enfermero</option>
-					for _, enfermero := range enfermeros {
-						<option value={ fmt.Sprint(enfermero.IDEnfermero) }>{ enfermero.Nombre }</option>
-					}
-				</select>
-			</div>
+	<div class="panel-card" style="max-width: 680px; margin: 0 auto;">
+		<div class="panel-heading">
+			<h2>Registrar nuevo aviso</h2>
 		</div>
-		<button type="submit">Guardar</button>
-	</form>
+		<form class="notice-form" method="post" action="/avisos">
+			<div class="notice-row">
+				<div class="notice-field">
+					<label for="web-aviso-nombre">Título del aviso</label>
+					<input id="web-aviso-nombre" name="nombre" placeholder="Ej: Desayuno y medicación" required/>
+				</div>
+			</div>
+			<div class="notice-row">
+				<div class="notice-field">
+					<label for="web-aviso-descripcion">Descripción detallada</label>
+					<textarea id="web-aviso-descripcion" name="descripcion" placeholder="Detalle de la actividad o medicación administrada..." required></textarea>
+				</div>
+			</div>
+			<div class="notice-row">
+				<div class="notice-field">
+					<label for="web-aviso-inicio">Fecha y hora de inicio</label>
+					<input id="web-aviso-inicio" type="datetime-local" name="fecha_hora_inicio" required/>
+				</div>
+			</div>
+			<div class="notice-row notice-row-related">
+				<div class="notice-field">
+					<label for="web-aviso-paciente">Paciente asociado</label>
+					<select id="web-aviso-paciente" name="id_paciente" required>
+						<option value="">Seleccionar paciente</option>
+						for _, paciente := range pacientes {
+							<option value={ fmt.Sprint(paciente.IDPaciente) }>{ paciente.Nombre }</option>
+						}
+					</select>
+				</div>
+				<div class="notice-field">
+					<label for="web-aviso-enfermero">Enfermero responsable</label>
+					<select id="web-aviso-enfermero" name="id_enfermero" required>
+						<option value="">Seleccionar enfermero</option>
+						for _, enfermero := range enfermeros {
+							<option value={ fmt.Sprint(enfermero.IDEnfermero) }>{ enfermero.Nombre }</option>
+						}
+					</select>
+				</div>
+			</div>
+			<div style="display: flex; gap: 1rem; margin-top: 1rem;">
+				<button class="button button-primary" type="submit">Guardar aviso</button>
+				<a class="button" href="/avisos" style="border: 1px solid var(--line);">Cancelar</a>
+			</div>
+		</form>
+	</div>
 }
