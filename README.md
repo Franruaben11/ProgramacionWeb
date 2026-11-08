@@ -47,6 +47,7 @@ git pull
 ## Comandos disponibles
 
 ```bash
+make run-app     # Ejecuta run-app.sh: prepara, levanta la app y limpia al terminar
 make generate    # Genera el código Go de sqlc usando Docker
 make generate-templ # Genera las vistas SSR a partir de archivos .templ
 make up          # Genera sqlc, construye y levanta la aplicación
@@ -59,6 +60,26 @@ make test        # Ejecuta el flujo completo de pruebas de la API
 make test-reset  # Recrea PostgreSQL y ejecuta el flujo completo de pruebas
 make fmt         # Formatea los archivos Go
 ```
+
+## Ejecución de la aplicación (`run-app.sh`)
+
+Para iniciar la aplicación completa se puede ejecutar:
+
+```bash
+make run-app
+```
+
+o directamente el script:
+
+```bash
+./run-app.sh
+```
+
+El script realiza de forma secuencial las tres etapas requeridas:
+
+1. **Tareas previas:** genera las vistas con `templ`, genera las consultas con `sqlc`, compila el proyecto, borra contenedores y volúmenes anteriores (`docker compose down -v`), levanta PostgreSQL y el servidor web con Docker Compose, y espera a que ambos servicios estén listos para recibir peticiones.
+2. **Ejecución de la aplicación:** la aplicación queda disponible en http://localhost:8080 hasta que el usuario presione **ENTER** en la terminal.
+3. **Tareas posteriores:** al presionar ENTER, ejecuta `docker compose down -v` para detener y eliminar los contenedores y volúmenes, dejando el entorno limpio.
 
 ## Pruebas completas
 

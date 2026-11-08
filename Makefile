@@ -1,8 +1,11 @@
-.PHONY: up generate generate-templ down logs db-up db-reset test test-api test-reset build fmt
+.PHONY: run-app up generate generate-templ down logs db-up db-reset test test-api test-reset build fmt
 
 COMPOSE := docker compose
 DB_SERVICE := database
 SQLC_IMAGE := sqlc/sqlc:1.31.1
+
+run-app:
+	@./run-app.sh
 
 up: generate
 	$(COMPOSE) up -d --build
@@ -34,7 +37,7 @@ test-api: generate build
 		$(COMPOSE) down -v --remove-orphans; \
 		$(COMPOSE) up -d --build; \
 		echo "Esperando a PostgreSQL..."; \
-		until $(COMPOSE) exec -T $(DB_SERVICE) pg_isready -U user -d mydatabase >/dev/null 2>&1; do \
+		until $(COMPOSE) exec -T $(DB_SERVICE) pg_isready -h localhost -U user -d mydatabase >/dev/null 2>&1; do \
 			sleep 1; \
 		done; \
 		echo "Esperando a la API..."; \
