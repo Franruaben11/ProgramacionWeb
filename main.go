@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql" // Paquete nativo para usar bases de datos
 	"fmt"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	seed "main.go/db"
 	"main.go/handlers"
 	"main.go/web"
 
@@ -50,6 +52,8 @@ func main() {
 
 	// Crear la instancia de sqlc (Se usará para los CRUD)
 	repo := db.New(dbConn)
+
+	seed.SeedDatabase(context.Background(), repo)
 
 	// Crear los handlers
 	enfermeroHandler := handlers.NewEnfermeroHandler(repo)

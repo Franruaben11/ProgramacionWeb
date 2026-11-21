@@ -25,6 +25,13 @@ body {
   background: var(--paper);
   font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 a {
@@ -470,6 +477,7 @@ select {
 .site-footer {
   color: #b9c8c8;
   background: #263c40;
+  margin-top: auto;
 }
 
 .footer-content {
