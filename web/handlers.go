@@ -3,7 +3,6 @@ package web
 import (
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/a-h/templ"
@@ -17,75 +16,88 @@ type Handler struct{ repo *db.Queries }
 
 func NewHandler(repo *db.Queries) *Handler { return &Handler{repo: repo} }
 
-func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if strings.HasSuffix(r.URL.Path, "/delete") && r.Method == http.MethodPost {
-		h.deleteResource(w, r)
+func (h *Handler) Home(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
 		return
 	}
-	path := strings.TrimPrefix(r.URL.Path, "/web")
-	if path == "" {
-		path = "/"
-	}
-	switch path {
-	case "/":
-		h.render(w, r, home.Home())
-	case "/pacientes":
-		h.pacientes(w, r)
-	case "/pacientes/nuevo":
-		h.formOrRedirect(w, r, forms.Paciente(), h.createPaciente)
-	case "/enfermeros":
-		h.enfermeros(w, r)
-	case "/enfermeros/nuevo":
-		h.formOrRedirect(w, r, forms.Enfermero(), h.createEnfermero)
-	case "/familiares":
-		h.familiares(w, r)
-	case "/familiares/nuevo":
-		h.formOrRedirect(w, r, forms.Familiar(), h.createFamiliar)
-	case "/avisos":
-		h.avisos(w, r)
-	case "/avisos/nuevo":
-		h.avisoFormOrRedirect(w, r)
-	default:
-		http.NotFound(w, r)
-	}
+	h.render(w, r, home.Home())
 }
 
-func (h *Handler) deleteResource(w http.ResponseWriter, r *http.Request) {
-	path := strings.TrimPrefix(r.URL.Path, "/web")
-	parts := strings.Split(strings.Trim(path, "/"), "/")
-	if len(parts) != 3 {
-		http.NotFound(w, r)
-		return
-	}
-	id, err := strconv.ParseInt(parts[1], 10, 32)
+// pacientes
+
+func (h *Handler) PacienteNuevo(w http.ResponseWriter, r *http.Request) {
+	h.formOrRedirect(w, r, forms.Paciente(), h.createPaciente)
+}
+
+func (h *Handler) DeletePaciente(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 32)
 	if err != nil || id <= 0 {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
 	}
-
-	var redirectPath string
-	switch parts[0] {
-	case "pacientes":
-		err = h.repo.DeletePaciente(r.Context(), int32(id))
-		redirectPath = "/pacientes"
-	case "enfermeros":
-		err = h.repo.DeleteEnfermero(r.Context(), int32(id))
-		redirectPath = "/enfermeros"
-	case "familiares":
-		err = h.repo.DeleteFamiliar(r.Context(), int32(id))
-		redirectPath = "/familiares"
-	case "avisos":
-		err = h.repo.DeleteAviso(r.Context(), int32(id))
-		redirectPath = "/avisos"
-	default:
-		http.NotFound(w, r)
-		return
-	}
-	if err != nil {
+	if err := h.repo.DeletePaciente(r.Context(), int32(id)); err != nil {
 		http.Error(w, "no se pudo eliminar el recurso: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, redirectPath, http.StatusSeeOther)
+	http.Redirect(w, r, "/pacientes", http.StatusSeeOther)
+}
+
+// enfermero
+
+func (h *Handler) EnfermeroNuevo(w http.ResponseWriter, r *http.Request) {
+	h.formOrRedirect(w, r, forms.Enfermero(), h.createEnfermero)
+}
+
+func (h *Handler) DeleteEnfermero(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 32)
+	if err != nil || id <= 0 {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+	if err := h.repo.DeleteEnfermero(r.Context(), int32(id)); err != nil {
+		http.Error(w, "no se pudo eliminar el recurso: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/enfermeros", http.StatusSeeOther)
+}
+
+//familiares
+
+func (h *Handler) FamiliarNuevo(w http.ResponseWriter, r *http.Request) {
+	h.formOrRedirect(w, r, forms.Familiar(), h.createFamiliar)
+}
+
+func (h *Handler) DeleteFamiliar(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 32)
+	if err != nil || id <= 0 {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+	if err := h.repo.DeleteFamiliar(r.Context(), int32(id)); err != nil {
+		http.Error(w, "no se pudo eliminar el recurso: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/familiares", http.StatusSeeOther)
+}
+
+//avisos
+
+func (h *Handler) AvisoNuevo(w http.ResponseWriter, r *http.Request) {
+	h.avisoFormOrRedirect(w, r)
+}
+
+func (h *Handler) DeleteAviso(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 32)
+	if err != nil || id <= 0 {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+	if err := h.repo.DeleteAviso(r.Context(), int32(id)); err != nil {
+		http.Error(w, "no se pudo eliminar el recurso: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/avisos", http.StatusSeeOther)
 }
 
 func (h *Handler) render(w http.ResponseWriter, r *http.Request, component templ.Component) {
@@ -128,7 +140,7 @@ func (h *Handler) avisoFormOrRedirect(w http.ResponseWriter, r *http.Request) {
 	}
 	h.render(w, r, forms.Aviso(pacientes, enfermeros))
 }
-func (h *Handler) pacientes(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Pacientes(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		h.createPaciente(w, r)
 		return
@@ -144,7 +156,7 @@ func (h *Handler) pacientes(w http.ResponseWriter, r *http.Request) {
 	}
 	h.render(w, r, list.Pacientes(items))
 }
-func (h *Handler) enfermeros(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Enfermeros(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		h.createEnfermero(w, r)
 		return
@@ -160,7 +172,7 @@ func (h *Handler) enfermeros(w http.ResponseWriter, r *http.Request) {
 	}
 	h.render(w, r, list.Enfermeros(items))
 }
-func (h *Handler) familiares(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Familiares(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		h.createFamiliar(w, r)
 		return
@@ -176,7 +188,7 @@ func (h *Handler) familiares(w http.ResponseWriter, r *http.Request) {
 	}
 	h.render(w, r, list.Familiares(items))
 }
-func (h *Handler) avisos(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Avisos(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		h.createAviso(w, r)
 		return

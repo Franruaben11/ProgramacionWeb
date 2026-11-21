@@ -2,12 +2,11 @@ package main
 
 import (
 	"database/sql" // Paquete nativo para usar bases de datos
-	"time"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"strings"
+	"time"
 
 	"main.go/handlers"
 	"main.go/web"
@@ -63,24 +62,34 @@ func main() {
 	staticDir := "./static"
 	fileServer := http.FileServer(http.Dir(staticDir))
 
-	// Configurar rutas usando los métodos de la misma instancia. Las rutas
-	// SSR usan la raíz; la API JSON se mantiene bajo /api.
 	mux := http.NewServeMux()
-	// HTML server-side rendered vive en la raíz; /web se conserva como alias.
 	mux.Handle("/static/", http.StripPrefix("/static/", fileServer))
-	mux.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/" || strings.HasPrefix(r.URL.Path, "/pacientes") ||
-			strings.HasPrefix(r.URL.Path, "/enfermeros") ||
-			strings.HasPrefix(r.URL.Path, "/familiares") ||
-			strings.HasPrefix(r.URL.Path, "/avisos") ||
-			strings.HasPrefix(r.URL.Path, "/web") {
-			webHandler.ServeHTTP(w, r)
+
+	// Home (si no es "/", cae al fileServer si necesitás compatibilidad, o devolvés 404)
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" {
+			webHandler.Home(w, r)
 			return
 		}
 		fileServer.ServeHTTP(w, r)
-	}))
-	mux.Handle("/web", webHandler)
-	mux.Handle("/web/", webHandler)
+	})
+
+	// Rutas SSR específicas
+	mux.HandleFunc("/pacientes", webHandler.Pacientes)
+	mux.HandleFunc("/pacientes/nuevo", webHandler.PacienteNuevo)
+	mux.HandleFunc("POST /pacientes/{id}/delete", webHandler.DeletePaciente)
+
+	mux.HandleFunc("/enfermeros", webHandler.Enfermeros)
+	mux.HandleFunc("/enfermeros/nuevo", webHandler.EnfermeroNuevo)
+	mux.HandleFunc("POST /enfermeros/{id}/delete", webHandler.DeleteEnfermero)
+
+	mux.HandleFunc("/familiares", webHandler.Familiares)
+	mux.HandleFunc("/familiares/nuevo", webHandler.FamiliarNuevo)
+	mux.HandleFunc("POST /familiares/{id}/delete", webHandler.DeleteFamiliar)
+
+	mux.HandleFunc("/avisos", webHandler.Avisos)
+	mux.HandleFunc("/avisos/nuevo", webHandler.AvisoNuevo)
+	mux.HandleFunc("POST /avisos/{id}/delete", webHandler.DeleteAviso)
 
 	// Las rutas bajo /api son las canónicas. StripPrefix conserva el formato
 	// de path que esperan los handlers actuales (/recurso[/id]).
