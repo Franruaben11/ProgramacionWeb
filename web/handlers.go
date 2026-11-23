@@ -7,7 +7,6 @@ import (
 
 	"github.com/a-h/templ"
 	db "main.go/db/sqlc"
-	"main.go/views/forms"
 	"main.go/views/home"
 	"main.go/views/list"
 )
@@ -26,10 +25,6 @@ func (h *Handler) Home(w http.ResponseWriter, r *http.Request) {
 
 // pacientes
 
-func (h *Handler) PacienteNuevo(w http.ResponseWriter, r *http.Request) {
-	h.formOrRedirect(w, r, forms.Paciente(), h.createPaciente)
-}
-
 func (h *Handler) DeletePaciente(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(r.PathValue("id"), 10, 32)
 	if err != nil || id <= 0 {
@@ -44,10 +39,6 @@ func (h *Handler) DeletePaciente(w http.ResponseWriter, r *http.Request) {
 }
 
 // enfermero
-
-func (h *Handler) EnfermeroNuevo(w http.ResponseWriter, r *http.Request) {
-	h.formOrRedirect(w, r, forms.Enfermero(), h.createEnfermero)
-}
 
 func (h *Handler) DeleteEnfermero(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(r.PathValue("id"), 10, 32)
@@ -64,10 +55,6 @@ func (h *Handler) DeleteEnfermero(w http.ResponseWriter, r *http.Request) {
 
 //familiares
 
-func (h *Handler) FamiliarNuevo(w http.ResponseWriter, r *http.Request) {
-	h.formOrRedirect(w, r, forms.Familiar(), h.createFamiliar)
-}
-
 func (h *Handler) DeleteFamiliar(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(r.PathValue("id"), 10, 32)
 	if err != nil || id <= 0 {
@@ -82,10 +69,6 @@ func (h *Handler) DeleteFamiliar(w http.ResponseWriter, r *http.Request) {
 }
 
 //avisos
-
-func (h *Handler) AvisoNuevo(w http.ResponseWriter, r *http.Request) {
-	h.avisoFormOrRedirect(w, r)
-}
 
 func (h *Handler) DeleteAviso(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(r.PathValue("id"), 10, 32)
@@ -105,40 +88,6 @@ func (h *Handler) render(w http.ResponseWriter, r *http.Request, component templ
 	if err := component.Render(r.Context(), w); err != nil {
 		http.Error(w, "error al renderizar: "+err.Error(), http.StatusInternalServerError)
 	}
-}
-func (h *Handler) formOrRedirect(w http.ResponseWriter, r *http.Request, component templ.Component, create func(http.ResponseWriter, *http.Request)) {
-	if r.Method == http.MethodPost {
-		create(w, r)
-		return
-	}
-	if r.Method != http.MethodGet {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	h.render(w, r, component)
-}
-
-func (h *Handler) avisoFormOrRedirect(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		h.createAviso(w, r)
-		return
-	}
-	if r.Method != http.MethodGet {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	pacientes, err := h.repo.ListPacientes(r.Context())
-	if err != nil {
-		http.Error(w, "no se pudieron cargar los pacientes: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-	enfermeros, err := h.repo.ListEnfermeros(r.Context())
-	if err != nil {
-		http.Error(w, "no se pudieron cargar los enfermeros: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-	h.render(w, r, forms.Aviso(pacientes, enfermeros))
 }
 func (h *Handler) Pacientes(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
@@ -202,7 +151,17 @@ func (h *Handler) Avisos(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	h.render(w, r, list.Avisos(items))
+	pacientes, err := h.repo.ListPacientes(r.Context())
+	if err != nil {
+		http.Error(w, "no se pudieron cargar los pacientes: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	enfermeros, err := h.repo.ListEnfermeros(r.Context())
+	if err != nil {
+		http.Error(w, "no se pudieron cargar los enfermeros: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	h.render(w, r, list.Avisos(items, pacientes, enfermeros))
 }
 
 func (h *Handler) createPaciente(w http.ResponseWriter, r *http.Request) {
@@ -218,7 +177,12 @@ func (h *Handler) createPaciente(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	http.Redirect(w, r, "/pacientes", http.StatusSeeOther)
+	items, err := h.repo.ListPacientes(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	h.render(w, r, list.PacienteList(items))
 }
 func (h *Handler) createEnfermero(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -234,7 +198,12 @@ func (h *Handler) createEnfermero(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	http.Redirect(w, r, "/enfermeros", http.StatusSeeOther)
+	items, err := h.repo.ListEnfermeros(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	h.render(w, r, list.EnfermeroList(items))
 }
 func (h *Handler) createFamiliar(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -250,7 +219,12 @@ func (h *Handler) createFamiliar(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	http.Redirect(w, r, "/familiares", http.StatusSeeOther)
+	items, err := h.repo.ListFamiliares(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	h.render(w, r, list.FamiliarList(items))
 }
 func (h *Handler) createAviso(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -281,5 +255,10 @@ func (h *Handler) createAviso(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	http.Redirect(w, r, "/avisos", http.StatusSeeOther)
+	items, err := h.repo.ListAvisos(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	h.render(w, r, list.AvisoList(items))
 }

@@ -3,21 +3,26 @@ package list
 import (
 	"fmt"
 	db "main.go/db/sqlc"
+	"main.go/views/forms"
 	"main.go/views/layout"
 )
 
 templ Pacientes(items []db.Paciente) {
-	@layout.Page("Pacientes", pacienteList(items))
+	@layout.Page("Pacientes", pacientesPage(items))
 }
 
-templ pacienteList(items []db.Paciente) {
-	<div class="panel-card">
+templ pacientesPage(items []db.Paciente) {
+	@forms.PacienteForm()
+	@PacienteList(items)
+}
+
+templ PacienteList(items []db.Paciente) {
+	<div class="panel-card" id="pacientes-list">
 		<div class="panel-heading">
 			<div style="display: flex; align-items: center; gap: 0.75rem;">
 				<h2 style="margin: 0;">Pacientes</h2>
 				<span class="badge">{ fmt.Sprint(len(items)) }</span>
 			</div>
-			<a class="button button-primary" href="/pacientes/nuevo">+ Nuevo paciente</a>
 		</div>
 		if len(items) == 0 {
 			<p style="color: var(--muted); padding: 1.5rem 0; margin: 0;">Todavía no hay pacientes registrados.</p>
@@ -51,17 +56,21 @@ templ pacienteList(items []db.Paciente) {
 }
 
 templ Enfermeros(items []db.Enfermero) {
-	@layout.Page("Enfermeros", enfermeroList(items))
+	@layout.Page("Enfermeros", enfermerosPage(items))
 }
 
-templ enfermeroList(items []db.Enfermero) {
-	<div class="panel-card">
+templ enfermerosPage(items []db.Enfermero) {
+	@forms.EnfermeroForm()
+	@EnfermeroList(items)
+}
+
+templ EnfermeroList(items []db.Enfermero) {
+	<div class="panel-card" id="enfermeros-list">
 		<div class="panel-heading">
 			<div style="display: flex; align-items: center; gap: 0.75rem;">
 				<h2 style="margin: 0;">Personal de Enfermería</h2>
 				<span class="badge">{ fmt.Sprint(len(items)) }</span>
 			</div>
-			<a class="button button-primary" href="/enfermeros/nuevo">+ Nuevo enfermero</a>
 		</div>
 		if len(items) == 0 {
 			<p style="color: var(--muted); padding: 1.5rem 0; margin: 0;">Todavía no hay enfermeros registrados.</p>
@@ -95,17 +104,21 @@ templ enfermeroList(items []db.Enfermero) {
 }
 
 templ Familiares(items []db.Familiare) {
-	@layout.Page("Familiares", familiarList(items))
+	@layout.Page("Familiares", familiaresPage(items))
 }
 
-templ familiarList(items []db.Familiare) {
-	<div class="panel-card">
+templ familiaresPage(items []db.Familiare) {
+	@forms.FamiliarForm()
+	@FamiliarList(items)
+}
+
+templ FamiliarList(items []db.Familiare) {
+	<div class="panel-card" id="familiares-list">
 		<div class="panel-heading">
 			<div style="display: flex; align-items: center; gap: 0.75rem;">
 				<h2 style="margin: 0;">Familiares de Contacto</h2>
 				<span class="badge">{ fmt.Sprint(len(items)) }</span>
 			</div>
-			<a class="button button-primary" href="/familiares/nuevo">+ Nuevo familiar</a>
 		</div>
 		if len(items) == 0 {
 			<p style="color: var(--muted); padding: 1.5rem 0; margin: 0;">Todavía no hay familiares registrados.</p>
@@ -138,18 +151,22 @@ templ familiarList(items []db.Familiare) {
 	</div>
 }
 
-templ Avisos(items []db.Aviso) {
-	@layout.Page("Avisos", avisoList(items))
+templ Avisos(items []db.Aviso, pacientes []db.Paciente, enfermeros []db.Enfermero) {
+	@layout.Page("Avisos", avisosPage(items, pacientes, enfermeros))
 }
 
-templ avisoList(items []db.Aviso) {
-	<div class="panel-card">
+templ avisosPage(items []db.Aviso, pacientes []db.Paciente, enfermeros []db.Enfermero) {
+	@forms.AvisoForm(pacientes, enfermeros)
+	@AvisoList(items)
+}
+
+templ AvisoList(items []db.Aviso) {
+	<div class="panel-card" id="avisos-list">
 		<div class="panel-heading">
 			<div style="display: flex; align-items: center; gap: 0.75rem;">
 				<h2 style="margin: 0;">Avisos y Actividades</h2>
 				<span class="badge">{ fmt.Sprint(len(items)) }</span>
 			</div>
-			<a class="button button-primary" href="/avisos/nuevo">+ Nuevo aviso</a>
 		</div>
 		if len(items) == 0 {
 			<p style="color: var(--muted); padding: 1.5rem 0; margin: 0;">Todavía no hay avisos registrados.</p>

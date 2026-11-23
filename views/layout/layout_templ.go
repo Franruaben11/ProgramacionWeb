@@ -42,7 +42,7 @@ func Page(title string, content templ.Component) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " · La Casa del Ángel</title><link rel=\"stylesheet\" href=\"/styles.css\"></head><body><header class=\"site-header\"><div class=\"container header-content\"><a class=\"brand\" href=\"/\"><span class=\"brand-mark\" aria-hidden=\"true\">LC</span> <span><strong>La Casa del Ángel</strong> <small>Gestión geriátrica</small></span></a><nav aria-label=\"Navegación principal\"><a href=\"/\">Inicio</a> <a href=\"/pacientes\">Pacientes</a> <a href=\"/enfermeros\">Enfermeros</a> <a href=\"/familiares\">Familiares</a> <a href=\"/avisos\">Avisos</a></nav></div></header><main class=\"container section\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " · La Casa del Ángel</title><link rel=\"stylesheet\" href=\"/styles.css\"><script src=\"https://unpkg.com/htmx.org@2.0.4\"></script></head><body><header class=\"site-header\"><div class=\"container header-content\"><a class=\"brand\" href=\"/\"><span class=\"brand-mark\" aria-hidden=\"true\">LC</span> <span><strong>La Casa del Ángel</strong> <small>Gestión geriátrica</small></span></a><nav aria-label=\"Navegación principal\"><a href=\"/\">Inicio</a> <a href=\"/pacientes\">Pacientes</a> <a href=\"/enfermeros\">Enfermeros</a> <a href=\"/familiares\">Familiares</a> <a href=\"/avisos\">Avisos</a></nav></div></header><main class=\"container section\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

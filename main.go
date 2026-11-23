@@ -80,19 +80,15 @@ func main() {
 
 	// Rutas SSR específicas
 	mux.HandleFunc("/pacientes", webHandler.Pacientes)
-	mux.HandleFunc("/pacientes/nuevo", webHandler.PacienteNuevo)
 	mux.HandleFunc("POST /pacientes/{id}/delete", webHandler.DeletePaciente)
 
 	mux.HandleFunc("/enfermeros", webHandler.Enfermeros)
-	mux.HandleFunc("/enfermeros/nuevo", webHandler.EnfermeroNuevo)
 	mux.HandleFunc("POST /enfermeros/{id}/delete", webHandler.DeleteEnfermero)
 
 	mux.HandleFunc("/familiares", webHandler.Familiares)
-	mux.HandleFunc("/familiares/nuevo", webHandler.FamiliarNuevo)
 	mux.HandleFunc("POST /familiares/{id}/delete", webHandler.DeleteFamiliar)
 
 	mux.HandleFunc("/avisos", webHandler.Avisos)
-	mux.HandleFunc("/avisos/nuevo", webHandler.AvisoNuevo)
 	mux.HandleFunc("POST /avisos/{id}/delete", webHandler.DeleteAviso)
 
 	// Las rutas bajo /api son las canónicas. StripPrefix conserva el formato
