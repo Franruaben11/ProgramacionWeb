@@ -260,5 +260,15 @@ func (h *Handler) createAviso(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	h.render(w, r, list.AvisoList(items))
+	pacientes, err := h.repo.ListPacientes(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	enfermeros, err := h.repo.ListEnfermeros(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	h.render(w, r, list.AvisoList(items, pacientes, enfermeros))
 }

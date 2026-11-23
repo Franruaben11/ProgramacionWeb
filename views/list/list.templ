@@ -166,16 +166,34 @@ templ FamiliarList(items []db.Familiare) {
 	</div>
 }
 
+func pacienteNombre(id int32, pacientes []db.Paciente) string {
+	for _, p := range pacientes {
+		if p.IDPaciente == id {
+			return p.Nombre
+		}
+	}
+	return fmt.Sprintf("#%d", id)
+}
+
+func enfermeroNombre(id int32, enfermeros []db.Enfermero) string {
+	for _, e := range enfermeros {
+		if e.IDEnfermero == id {
+			return e.Nombre
+		}
+	}
+	return fmt.Sprintf("#%d", id)
+}
+
 templ Avisos(items []db.Aviso, pacientes []db.Paciente, enfermeros []db.Enfermero) {
 	@layout.Page("Avisos", avisosPage(items, pacientes, enfermeros))
 }
 
 templ avisosPage(items []db.Aviso, pacientes []db.Paciente, enfermeros []db.Enfermero) {
 	@forms.AvisoForm(pacientes, enfermeros)
-	@AvisoList(items)
+	@AvisoList(items, pacientes, enfermeros)
 }
 
-templ AvisoList(items []db.Aviso) {
+templ AvisoList(items []db.Aviso, pacientes []db.Paciente, enfermeros []db.Enfermero) {
 	<div class="panel-card" id="avisos-list">
 		<div class="panel-heading">
 			<div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -193,6 +211,8 @@ templ AvisoList(items []db.Aviso) {
 							<th style="width: 80px;">ID</th>
 							<th>Título</th>
 							<th>Descripción</th>
+							<th>Paciente</th>
+							<th>Enfermero</th>
 							<th>Fecha y Hora</th>
 							<th style="width: 120px; text-align: right;">Acciones</th>
 						</tr>
@@ -203,6 +223,8 @@ templ AvisoList(items []db.Aviso) {
 								<td class="record-id">#{ fmt.Sprint(item.IDAviso) }</td>
 								<td><strong>{ item.Nombre }</strong></td>
 								<td style="color: var(--muted);">{ item.Descripcion }</td>
+								<td>{ pacienteNombre(item.IDPaciente, pacientes) }</td>
+								<td>{ enfermeroNombre(item.IDEnfermero, enfermeros) }</td>
 								<td>{ item.FechaHoraInicio.Format("02/01/2006 15:04") }</td>
 								<td style="text-align: right;">
 									<button

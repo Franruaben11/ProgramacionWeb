@@ -2,7 +2,7 @@
 SELECT * FROM Avisos WHERE id_aviso = $1;
 
 -- name: ListAvisos :many
-SELECT * FROM Avisos ORDER BY nombre;
+SELECT * FROM Avisos ORDER BY fecha_hora_inicio;
 
 -- name: CreateAviso :one
 INSERT INTO avisos (nombre, descripcion, fecha_hora_inicio, id_paciente, id_enfermero)

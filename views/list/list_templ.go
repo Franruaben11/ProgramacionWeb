@@ -519,6 +519,24 @@ func FamiliarList(items []db.Familiare) templ.Component {
 	})
 }
 
+func pacienteNombre(id int32, pacientes []db.Paciente) string {
+	for _, p := range pacientes {
+		if p.IDPaciente == id {
+			return p.Nombre
+		}
+	}
+	return fmt.Sprintf("#%d", id)
+}
+
+func enfermeroNombre(id int32, enfermeros []db.Enfermero) string {
+	for _, e := range enfermeros {
+		if e.IDEnfermero == id {
+			return e.Nombre
+		}
+	}
+	return fmt.Sprintf("#%d", id)
+}
+
 func Avisos(items []db.Aviso, pacientes []db.Paciente, enfermeros []db.Enfermero) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -573,7 +591,7 @@ func avisosPage(items []db.Aviso, pacientes []db.Paciente, enfermeros []db.Enfer
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = AvisoList(items).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = AvisoList(items, pacientes, enfermeros).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -581,7 +599,7 @@ func avisosPage(items []db.Aviso, pacientes []db.Paciente, enfermeros []db.Enfer
 	})
 }
 
-func AvisoList(items []db.Aviso) templ.Component {
+func AvisoList(items []db.Aviso, pacientes []db.Paciente, enfermeros []db.Enfermero) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -609,7 +627,7 @@ func AvisoList(items []db.Aviso) templ.Component {
 		var templ_7745c5c3_Var25 string
 		templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(len(items)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 183, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 201, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 		if templ_7745c5c3_Err != nil {
@@ -625,7 +643,7 @@ func AvisoList(items []db.Aviso) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<div style=\"overflow-x: auto;\"><table><thead><tr><th style=\"width: 80px;\">ID</th><th>Título</th><th>Descripción</th><th>Fecha y Hora</th><th style=\"width: 120px; text-align: right;\">Acciones</th></tr></thead> <tbody>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<div style=\"overflow-x: auto;\"><table><thead><tr><th style=\"width: 80px;\">ID</th><th>Título</th><th>Descripción</th><th>Paciente</th><th>Enfermero</th><th>Fecha y Hora</th><th style=\"width: 120px; text-align: right;\">Acciones</th></tr></thead> <tbody>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -637,7 +655,7 @@ func AvisoList(items []db.Aviso) templ.Component {
 				var templ_7745c5c3_Var26 string
 				templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(item.IDAviso))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 203, Col: 57}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 223, Col: 57}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 				if templ_7745c5c3_Err != nil {
@@ -650,7 +668,7 @@ func AvisoList(items []db.Aviso) templ.Component {
 				var templ_7745c5c3_Var27 string
 				templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(item.Nombre)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 204, Col: 33}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 224, Col: 33}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 				if templ_7745c5c3_Err != nil {
@@ -663,7 +681,7 @@ func AvisoList(items []db.Aviso) templ.Component {
 				var templ_7745c5c3_Var28 string
 				templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(item.Descripcion)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 205, Col: 59}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 225, Col: 59}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 				if templ_7745c5c3_Err != nil {
@@ -674,38 +692,64 @@ func AvisoList(items []db.Aviso) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var29 string
-				templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(item.FechaHoraInicio.Format("02/01/2006 15:04"))
+				templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(pacienteNombre(item.IDPaciente, pacientes))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 206, Col: 61}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 226, Col: 56}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</td><td style=\"text-align: right;\"><button class=\"delete-button\" type=\"button\" hx-delete=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</td><td>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var30 string
-				templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs("/avisos/" + fmt.Sprint(item.IDAviso))
+				templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(enfermeroNombre(item.IDEnfermero, enfermeros))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 211, Col: 59}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 227, Col: 59}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "\" hx-target=\"closest tr\" hx-swap=\"outerHTML\" hx-confirm=\"¿Estás seguro de eliminar este aviso?\">Eliminar</button></td></tr>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</td><td>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var31 string
+				templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(item.FechaHoraInicio.Format("02/01/2006 15:04"))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 228, Col: 61}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</td><td style=\"text-align: right;\"><button class=\"delete-button\" type=\"button\" hx-delete=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var32 string
+				templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs("/avisos/" + fmt.Sprint(item.IDAviso))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/list/list.templ`, Line: 233, Col: 59}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "\" hx-target=\"closest tr\" hx-swap=\"outerHTML\" hx-confirm=\"¿Estás seguro de eliminar este aviso?\">Eliminar</button></td></tr>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</tbody></table></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</tbody></table></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
