@@ -35,7 +35,7 @@ func (h *Handler) DeletePaciente(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "no se pudo eliminar el recurso: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/pacientes", http.StatusSeeOther)
+	w.WriteHeader(http.StatusOK)
 }
 
 // enfermero
@@ -50,7 +50,7 @@ func (h *Handler) DeleteEnfermero(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "no se pudo eliminar el recurso: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/enfermeros", http.StatusSeeOther)
+	w.WriteHeader(http.StatusOK)
 }
 
 //familiares
@@ -65,7 +65,7 @@ func (h *Handler) DeleteFamiliar(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "no se pudo eliminar el recurso: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/familiares", http.StatusSeeOther)
+	w.WriteHeader(http.StatusOK)
 }
 
 //avisos
@@ -80,7 +80,7 @@ func (h *Handler) DeleteAviso(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "no se pudo eliminar el recurso: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/avisos", http.StatusSeeOther)
+	w.WriteHeader(http.StatusOK)
 }
 
 func (h *Handler) render(w http.ResponseWriter, r *http.Request, component templ.Component) {

@@ -42,9 +42,14 @@ templ PacienteList(items []db.Paciente) {
 								<td class="record-id">#{ fmt.Sprint(item.IDPaciente) }</td>
 								<td><strong>{ item.Nombre }</strong></td>
 								<td style="text-align: right;">
-									<form method="post" action={ templ.SafeURL("/pacientes/" + fmt.Sprint(item.IDPaciente) + "/delete") } style="display: inline;">
-										<button class="delete-button" type="submit">Eliminar</button>
-									</form>
+									<button
+										class="delete-button"
+										type="button"
+										hx-delete={ "/pacientes/" + fmt.Sprint(item.IDPaciente) }
+										hx-target="closest tr"
+										hx-swap="outerHTML"
+										hx-confirm="¿Estás seguro de eliminar este paciente?"
+									>Eliminar</button>
 								</td>
 							</tr>
 						}
@@ -90,9 +95,14 @@ templ EnfermeroList(items []db.Enfermero) {
 								<td class="record-id">#{ fmt.Sprint(item.IDEnfermero) }</td>
 								<td><strong>{ item.Nombre }</strong></td>
 								<td style="text-align: right;">
-									<form method="post" action={ templ.SafeURL("/enfermeros/" + fmt.Sprint(item.IDEnfermero) + "/delete") } style="display: inline;">
-										<button class="delete-button" type="submit">Eliminar</button>
-									</form>
+									<button
+										class="delete-button"
+										type="button"
+										hx-delete={ "/enfermeros/" + fmt.Sprint(item.IDEnfermero) }
+										hx-target="closest tr"
+										hx-swap="outerHTML"
+										hx-confirm="¿Estás seguro de eliminar este enfermero?"
+									>Eliminar</button>
 								</td>
 							</tr>
 						}
@@ -138,9 +148,14 @@ templ FamiliarList(items []db.Familiare) {
 								<td class="record-id">#{ fmt.Sprint(item.IDFamiliar) }</td>
 								<td><strong>{ item.Nombre }</strong></td>
 								<td style="text-align: right;">
-									<form method="post" action={ templ.SafeURL("/familiares/" + fmt.Sprint(item.IDFamiliar) + "/delete") } style="display: inline;">
-										<button class="delete-button" type="submit">Eliminar</button>
-									</form>
+									<button
+										class="delete-button"
+										type="button"
+										hx-delete={ "/familiares/" + fmt.Sprint(item.IDFamiliar) }
+										hx-target="closest tr"
+										hx-swap="outerHTML"
+										hx-confirm="¿Estás seguro de eliminar este familiar?"
+									>Eliminar</button>
 								</td>
 							</tr>
 						}
@@ -190,9 +205,14 @@ templ AvisoList(items []db.Aviso) {
 								<td style="color: var(--muted);">{ item.Descripcion }</td>
 								<td>{ item.FechaHoraInicio.Format("02/01/2006 15:04") }</td>
 								<td style="text-align: right;">
-									<form method="post" action={ templ.SafeURL("/avisos/" + fmt.Sprint(item.IDAviso) + "/delete") } style="display: inline;">
-										<button class="delete-button" type="submit">Eliminar</button>
-									</form>
+									<button
+										class="delete-button"
+										type="button"
+										hx-delete={ "/avisos/" + fmt.Sprint(item.IDAviso) }
+										hx-target="closest tr"
+										hx-swap="outerHTML"
+										hx-confirm="¿Estás seguro de eliminar este aviso?"
+									>Eliminar</button>
 								</td>
 							</tr>
 						}
