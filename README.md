@@ -5,199 +5,231 @@
 La Casa del Ángel es una aplicación web para gestionar y comunicar la
 información cotidiana de una residencia geriátrica.
 
-El sistema está pensado para el personal de enfermería y los familiares de los
-pacientes. En una residencia, la información sobre las actividades diarias
-puede quedar distribuida en distintos medios o comunicarse de manera informal.
-Esto dificulta el seguimiento de cada paciente y puede provocar confusiones
-entre las personas responsables de su cuidado y sus familiares.
+El sistema centraliza los datos de pacientes, enfermeros, familiares y avisos.
+Los enfermeros pueden registrar actividades asociadas a un paciente, incluyendo
+su descripción y fecha y hora de realización. Los familiares pueden consultar
+esta información para realizar el seguimiento diario de cada paciente.
 
-La aplicación centraliza en un único lugar los datos de pacientes, enfermeros,
-familiares y avisos. Los enfermeros pueden registrar actividades con su
-descripción y horario, asociándolas al paciente correspondiente. Los familiares
-pueden consultar esa información para conocer las actividades realizadas
-durante el día.
+El proyecto utiliza Go, plantillas `templ`, PostgreSQL y sqlc.
 
-De esta manera, el proyecto busca mejorar la organización de la residencia,
-facilitar el seguimiento de cada paciente y favorecer una comunicación más
-clara entre el personal de cuidado y sus familiares.
+## Tecnologías utilizadas
 
-## Requisitos
-
-- Git
-- Docker y Docker Compose
 - Go
+- Templ
+- HTMX
+- PostgreSQL
+- sqlc
+- Docker y Docker Compose
 - GNU Make
 - Bash y curl
 
-## Preparar el proyecto
+## Requisitos
 
-Clonar el repositorio y entrar en la carpeta del proyecto:
+Para ejecutar el proyecto se necesitan:
+
+- Git
+- Go
+- Docker y Docker Compose
+- GNU Make
+- Bash
+- curl
+
+## Clonar el repositorio
 
 ```bash
 git clone https://github.com/Franruaben11/ProgramacionWeb.git
 cd ProgramacionWeb
+git checkout tp6
 ```
 
-Para actualizar una copia existente:
+## Ejecutar la aplicación
 
-```bash
-git pull
-```
-
-## Comandos disponibles
-
-```bash
-make run-app     # Ejecuta run-app.sh: prepara, levanta la app y limpia al terminar
-make generate    # Genera el código Go de sqlc usando Docker
-make generate-templ # Genera las vistas SSR a partir de archivos .templ
-make up          # Genera sqlc, construye y levanta la aplicación
-make down        # Detiene y elimina los contenedores
-make logs        # Muestra los logs de los contenedores
-make db-up       # Levanta solamente PostgreSQL
-make build       # Compila el proyecto Go
-make test-api    # Ejecuta las pruebas curl de la API y limpia el entorno
-make test        # Ejecuta el flujo completo de pruebas de la API
-make test-reset  # Recrea PostgreSQL y ejecuta el flujo completo de pruebas
-make fmt         # Formatea los archivos Go
-```
-
-## Ejecución de la aplicación (`run-app.sh`)
-
-Para iniciar la aplicación completa se puede ejecutar:
+El proyecto puede iniciarse con:
 
 ```bash
 make run-app
 ```
 
-o directamente el script:
+También puede ejecutarse directamente:
 
 ```bash
 ./run-app.sh
 ```
 
-El script realiza de forma secuencial las tres etapas requeridas:
+El script realiza automáticamente las siguientes tareas:
 
-1. **Tareas previas:** genera las vistas con `templ`, genera las consultas con `sqlc`, compila el proyecto, borra contenedores y volúmenes anteriores (`docker compose down -v`), levanta PostgreSQL y el servidor web con Docker Compose, y espera a que ambos servicios estén listos para recibir peticiones.
-2. **Ejecución de la aplicación:** la aplicación queda disponible en http://localhost:8080 hasta que el usuario presione **ENTER** en la terminal.
-3. **Tareas posteriores:** al presionar ENTER, ejecuta `docker compose down -v` para detener y eliminar los contenedores y volúmenes, dejando el entorno limpio.
+1. Genera las vistas `templ`.
+2. Ejecuta sqlc para generar el código de acceso a la base de datos.
+3. Compila el proyecto.
+4. Elimina contenedores y volúmenes anteriores.
+5. Levanta PostgreSQL y la aplicación con Docker Compose.
+6. Espera a que PostgreSQL y el servidor estén disponibles.
+7. Mantiene la aplicación ejecutándose hasta que se presione ENTER.
+8. Detiene los contenedores y elimina los volúmenes al finalizar.
 
-## Pruebas completas
+Una vez iniciada, la aplicación estará disponible en:
 
-El comando `make test` realiza automáticamente todas las tareas necesarias:
+- http://localhost:8080
+- http://localhost:8080/pacientes
+- http://localhost:8080/enfermeros
+- http://localhost:8080/familiares
+- http://localhost:8080/avisos
 
-1. Genera el código de `sqlc`.
-2. Compila el proyecto.
-3. Elimina contenedores, redes y volúmenes anteriores.
-4. Levanta PostgreSQL y la aplicación con Docker Compose.
-5. Espera a que PostgreSQL y la API estén disponibles.
-6. Ejecuta las pruebas de los endpoints mediante `requests.sh` y curl.
-7. Elimina contenedores, redes y volúmenes al finalizar, incluso si una prueba falla.
-
-Las pruebas cubren las operaciones válidas disponibles para:
-
-- Enfermeros: POST, GET general, GET por ID, PUT y DELETE.
-- Pacientes: POST, GET general, GET por ID, PUT y DELETE.
-- Familiares: POST, GET general, GET por ID, PUT y DELETE.
-- Avisos: POST, GET general, GET por ID y DELETE.
-
-Además de comprobar que las peticiones finalicen correctamente, `requests.sh`
-valida explícitamente:
-
-- el código HTTP esperado para cada operación;
-- atributos relevantes del JSON recibido;
-- los identificadores devueltos por las operaciones de creación;
-- que las actualizaciones queden persistidas al consultar nuevamente el recurso;
-- que una eliminación devuelva `204` y que el recurso deje de estar disponible;
-- errores por JSON inválido, campos obligatorios faltantes, fechas inválidas,
-  métodos no permitidos e identificadores inexistentes.
-
-Los identificadores se obtienen de las respuestas de creación, por lo que las
-pruebas no dependen de que la base de datos comience a numerar registros desde
-`1`.
-
-Para ejecutar solamente el flujo de pruebas de la API:
+## Comandos disponibles
 
 ```bash
-make test-api
+make run-app        # Ejecuta todo el flujo de inicio y limpieza
+make generate       # Genera las consultas sqlc y las vistas templ
+make generate-templ # Genera las vistas templ
+make up             # Levanta PostgreSQL y la aplicación
+make down           # Detiene los contenedores
+make logs           # Muestra los logs de Docker Compose
+make db-up          # Levanta solamente PostgreSQL
+make db-reset       # Recrea PostgreSQL y elimina sus datos
+make build          # Compila el proyecto Go
+make test-api       # Ejecuta las pruebas de la API y limpia el entorno
+make test           # Ejecuta el flujo completo de pruebas
+make test-reset     # Recrea PostgreSQL y ejecuta todas las pruebas
+make fmt            # Formatea los archivos Go
 ```
 
-> Estos comandos eliminan el volumen de PostgreSQL y todos los datos guardados para comenzar con una base limpia.
+## Interfaces dinámicas con HTMX
 
-## Ejecutar para desarrollo
+La interfaz utiliza HTMX para crear y eliminar registros sin recargar
+completamente la página.
 
-Para levantar el entorno y dejarlo ejecutándose:
+### Crear registros
 
-```bash
-make up
+Cada formulario utiliza:
+
+- `hx-post` para enviar el formulario al endpoint correspondiente.
+- `hx-target` para indicar el contenedor que debe actualizarse.
+- `hx-swap="outerHTML"` para reemplazar completamente la lista existente.
+
+Después de crear el registro, el servidor vuelve a consultar la base de datos
+y devuelve solamente el componente actualizado de la lista.
+
+Las operaciones están disponibles en:
+
+- `POST /pacientes`
+- `POST /enfermeros`
+- `POST /familiares`
+- `POST /avisos`
+
+### Eliminar registros
+
+Cada elemento de las listas tiene un botón con:
+
+- `hx-delete` para solicitar la eliminación.
+- `hx-target="closest tr"` para seleccionar la fila correspondiente.
+- `hx-swap="outerHTML"` para eliminar la fila.
+- `hx-confirm` para solicitar confirmación al usuario.
+
+Las rutas de eliminación son:
+
+- `DELETE /pacientes/{id}`
+- `DELETE /enfermeros/{id}`
+- `DELETE /familiares/{id}`
+- `DELETE /avisos/{id}`
+
+Los handlers de eliminación llaman al método correspondiente generado por
+sqlc y devuelven una respuesta vacía con estado `200 OK`.
+
+HTMX carga el contenido generado por las plantillas `templ` desde el servidor.
+No utiliza JavaScript escrito en el proyecto ni realiza recargas completas al
+crear o eliminar registros.
+
+## Arquitectura y rutas principales
+
+### Interfaz SSR con HTMX
+
+- `/`: página de inicio.
+- `/pacientes`: listado y formulario de pacientes.
+- `/enfermeros`: listado y formulario de enfermeros.
+- `/familiares`: listado y formulario de familiares.
+- `/avisos`: listado y formulario de avisos.
+
+### API JSON
+
+- `/api/pacientes`
+- `/api/enfermeros`
+- `/api/familiares`
+- `/api/avisos`
+
+Las rutas bajo `/api` permiten realizar operaciones CRUD mediante respuestas
+JSON y se mantienen como complemento de la interfaz SSR.
+
+Las rutas JSON reciben y devuelven datos en formato JSON, mientras que las
+rutas SSR devuelven fragmentos HTML utilizados por HTMX o páginas completas
+generadas con `templ`.
+
+## Base de datos
+
+PostgreSQL se ejecuta en Docker Compose. Las consultas se escriben en archivos
+SQL dentro de `db/queries/` y sqlc genera las operaciones de Go en
+`db/sqlc/`.
+
+El esquema se encuentra en:
+
+```text
+db/schema/schema.sql
 ```
 
-La aplicación queda disponible en [http://localhost:8080](http://localhost:8080) y PostgreSQL en el puerto `5432`.
+Las credenciales locales utilizadas por Docker Compose son:
 
-La interfaz principal utiliza vistas SSR con templ en la raíz (`/`), incluyendo
-el inicio, los listados y los formularios de pacientes, enfermeros, familiares
-y avisos. La ruta `/web` se conserva como alias compatible. La API JSON y el
-frontend estático del TP4 se mantienen disponibles como compatibilidad.
+- Usuario: `user`
+- Contraseña: `password`
+- Base de datos: `mydatabase`
+- Puerto PostgreSQL: `5432`
 
-## Arquitectura y rutas
+> El volumen de PostgreSQL se elimina al ejecutar `docker compose down -v`.
+> Esto elimina todos los datos persistidos.
 
-- **API JSON:** `/api/pacientes`, `/api/enfermeros`, `/api/familiares` y
-  `/api/avisos`, incluyendo sus rutas por ID. El frontend TP4 consume estas
-  rutas con `fetch`.
-- **Compatibilidad:** las rutas antiguas sin `/api` continúan disponibles
-  durante la transición.
-- **Interfaz SSR principal:** `/`, `/pacientes`, `/enfermeros`, `/familiares` y
-  `/avisos`. Los formularios de alta se encuentran en
-  `/<entidad>/nuevo` y redirigen con `303 See Other` después de crear.
-- **Alias SSR:** `/web` y `/web/<entidad>` conservan el acceso a las mismas
-  vistas renderizadas en el servidor.
-- **Frontend TP4 de compatibilidad:** los archivos de `static/` se mantienen
-  disponibles para clientes anteriores; la raíz ya no sirve el panel estático.
+## Ejecutar sin Docker Compose para desarrollo
 
-La API y las páginas SSR comparten la misma capa de datos generada por sqlc.
-Las vistas SSR se generan desde archivos `.templ` con:
-
-```bash
-make generate-templ
-```
-
-La autenticación no forma parte de esta versión; el objetivo actual es
-demostrar persistencia, consumo de API, manipulación del DOM y renderizado
-server-side.
-
-También se puede iniciar la aplicación directamente con Go desde la raíz del proyecto:
-
-```bash
-go run .
-```
-
-En ese caso, PostgreSQL debe estar disponible localmente, por ejemplo mediante:
+Es posible levantar primero PostgreSQL:
 
 ```bash
 make db-up
 ```
 
-## Funcionamiento principal
+Luego iniciar la aplicación desde el directorio del proyecto:
 
-El flujo de uso de la aplicación es el siguiente:
+```bash
+go run .
+```
 
-1. Se registran los pacientes que viven en la residencia.
-2. Se registran los enfermeros responsables de su cuidado.
-3. Se registran los familiares vinculados a los pacientes.
-4. Un enfermero crea un aviso para registrar una actividad o situación
-   relacionada con un paciente.
-5. El aviso incluye una descripción, la fecha y hora de registro, el paciente involucrado y el
-   enfermero responsable.
-6. La información puede consultarse posteriormente para realizar el
-   seguimiento diario del paciente.
+La aplicación estará disponible en http://localhost:8080.
+
+## Pruebas
+
+El comando:
+
+```bash
+make test
+```
+
+realiza automáticamente el siguiente flujo:
+
+1. Genera las vistas y el código sqlc.
+2. Compila el proyecto.
+3. Elimina contenedores y volúmenes anteriores.
+4. Levanta PostgreSQL y la aplicación.
+5. Espera a que ambos servicios estén disponibles.
+6. Ejecuta las pruebas HTTP definidas en `requests.sh`.
+7. Elimina contenedores y volúmenes al finalizar.
+
+Para ejecutar solamente las pruebas de la API:
+
+```bash
+make test-api
+```
 
 ## Entidades principales
 
-- **Paciente:** persona residente de la institución. Se registra su nombre y se
-  utiliza como referencia para asociar actividades y avisos.
-- **Enfermero:** integrante del personal de enfermería que registra
-  información sobre las actividades realizadas para un paciente.
-- **Familiar:** persona vinculada a un paciente que necesita consultar
-  información sobre sus actividades diarias.
-- **Aviso:** actividad o comunicación asociada a un paciente y registrada por un
-  enfermero. Incluye nombre, descripción, fecha y hora de registro, paciente relacionado
-  y enfermero responsable.
+- **Paciente:** persona residente de la institución.
+- **Enfermero:** integrante del personal de enfermería responsable del cuidado.
+- **Familiar:** persona vinculada a un paciente.
+- **Aviso:** actividad o comunicación registrada por un enfermero para un
+  paciente. Incluye título, descripción, fecha y hora, paciente asociado y
+  enfermero responsable.
